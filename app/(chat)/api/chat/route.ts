@@ -7,6 +7,7 @@ import {
   stepCountIs,
   streamText,
 } from "ai";
+import { checkBotId } from "botid/server";
 import { after } from "next/server";
 import { createResumableStreamContext } from "resumable-stream";
 import { auth, type UserType } from "@/app/(auth)/auth";
@@ -63,7 +64,14 @@ export async function POST(request: Request) {
     const { id, message, messages, selectedChatModel, selectedVisibilityType } =
       requestBody;
 
-    const session = await auth();
+    const [botResult, session] = await Promise.all([
+      checkBotId().catch(() => null),
+      auth(),
+    ]);
+
+    if (botResult?.isBot) {
+      return new ChatbotError("unauthorized:chat").toResponse();
+    }
 
     if (!session?.user) {
       return new ChatbotError("unauthorized:chat").toResponse();

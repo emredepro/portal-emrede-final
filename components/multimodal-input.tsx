@@ -3,7 +3,7 @@
 import type { UseChatHelpers } from "@ai-sdk/react";
 import type { UIMessage } from "ai";
 import equal from "fast-deep-equal";
-import { CheckIcon } from "lucide-react";
+import { CheckIcon, Loader2 } from "lucide-react";
 import {
   type ChangeEvent,
   type Dispatch,
@@ -395,6 +395,18 @@ function PureMultimodalInput({
             value={input}
           />
         </div>
+<div className="flex items-center gap-2">
+            {status === "streaming" && (
+              <Loader2 size={20} />
+            )}
+            {isVoiceRecording && (
+              <div className="flex items-center gap-1 text-red-500">
+                <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+                <span className="text-xs font-medium">Recording</span>
+              </div>
+            )}
+          </div>
+
         <PromptInputToolbar className="border-top-0! border-t-0! p-0 shadow-none dark:border-0 dark:border-transparent!">
           <PromptInputTools className="gap-0 sm:gap-0.5">
 {/* todo speech to text */}

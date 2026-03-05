@@ -46,6 +46,8 @@ import { PreviewAttachment } from "./preview-attachment";
 import { SuggestedActions } from "./suggested-actions";
 import { Button } from "./ui/button";
 import type { VisibilityType } from "./visibility-selector";
+import { VoiceInput } from "./voice-input";
+import { useUserVerification } from "@/hooks/use-user-verification";
 
 function setCookie(name: string, value: string) {
   const maxAge = 60 * 60 * 24 * 365; // 1 year
@@ -84,6 +86,8 @@ function PureMultimodalInput({
   selectedModelId: string;
   onModelChange?: (modelId: string) => void;
 }) {
+  const { isUserVerified } = useUserVerification(true);
+
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { width } = useWindowSize();
 
@@ -284,6 +288,20 @@ function PureMultimodalInput({
     [setAttachments, uploadFile]
   );
 
+  const [isVoiceRecording, setIsVoiceRecording] = useState(false);
+
+  // Handle voice transcript updates
+  const handleVoiceTranscript = useCallback((transcript: string) => {
+    setInput(transcript);
+    setIsVoiceRecording(transcript.length > 0);
+  }, [setInput]);
+
+  // Handle voice recording state changes
+  const handleVoiceRecordingChange = useCallback((isRecording: boolean) => {
+    setIsVoiceRecording(isRecording);
+  }, []);
+
+
   // Add paste event listener to textarea
   useEffect(() => {
     const textarea = textareaRef.current;
@@ -379,6 +397,13 @@ function PureMultimodalInput({
         </div>
         <PromptInputToolbar className="border-top-0! border-t-0! p-0 shadow-none dark:border-0 dark:border-transparent!">
           <PromptInputTools className="gap-0 sm:gap-0.5">
+{/* todo speech to text */}
+ <VoiceInput
+                onTranscript={handleVoiceTranscript}
+                onRecordingChange={handleVoiceRecordingChange}
+                isDisabled={status === "streaming" || !isUserVerified}
+                className="h-8 w-8"
+              />
             <AttachmentsButton
               fileInputRef={fileInputRef}
               selectedModelId={selectedModelId}

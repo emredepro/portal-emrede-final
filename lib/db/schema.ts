@@ -172,14 +172,13 @@ export const stream = pgTable(
 export type Stream = InferSelectModel<typeof stream>;
 
 
-// TODO
-// Messages limit tracking for guest users
 export const guestMessageQuota = pgTable("GuestMessageQuota", {
   id: uuid("id").primaryKey().notNull().defaultRandom(),
   userId: uuid("userId").references(() => user.id),
-  ipAddress: varchar("ipAddress", { length: 45 }).unique(),
+  ipAddress: varchar("ipAddress", { length: 45 }),
   messagesUsed: integer("messagesUsed").default(0),
   imagesUsed: integer("imagesUsed").default(0),
+  date: date("date").notNull().defaultNow(), // Track by date for daily reset
   createdAt: timestamp("createdAt").notNull().defaultNow(),
   updatedAt: timestamp("updatedAt").defaultNow(),
 });
@@ -187,13 +186,15 @@ export const guestMessageQuota = pgTable("GuestMessageQuota", {
 export type GuestMessageQuota = InferSelectModel<typeof guestMessageQuota>;
 
 
-// Message limit tracking for logged-in users (5 messages per day)
+// reset every day the messages limit usage
 export const userMessageQuota = pgTable("UserMessageQuota", {
   id: uuid("id").primaryKey().notNull().defaultRandom(),
   userId: uuid("userId").notNull().references(() => user.id),
   messagesUsed: integer("messagesUsed").notNull().default(0),
   imagesUsed: integer("imagesUsed").default(0),
   date: date("date").notNull().defaultNow(), // Track by date for daily reset
+  isGuest: boolean("isGuest").notNull().default(false),
+  ipAddress: varchar("ipAddress", { length: 45 }), // Optional IP address, only for guest users
   createdAt: timestamp("createdAt").notNull().defaultNow(),
   updatedAt: timestamp("updatedAt").defaultNow(),
 });

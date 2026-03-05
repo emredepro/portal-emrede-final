@@ -1,4 +1,4 @@
-import { geolocation } from "@vercel/functions";
+import { geolocation, ipAddress } from "@vercel/functions";
 import {
   convertToModelMessages,
   createUIMessageStream,
@@ -7,10 +7,12 @@ import {
   stepCountIs,
   streamText,
 } from "ai";
+import { checkBotId } from "botid/server";
 import { after } from "next/server";
 import { createResumableStreamContext } from "resumable-stream";
 import { auth, type UserType } from "@/app/(auth)/auth";
 import { entitlementsByUserType } from "@/lib/ai/entitlements";
+import { allowedModelIds } from "@/lib/ai/models";
 import { type RequestHints, systemPrompt } from "@/lib/ai/prompts";
 import { getLanguageModel } from "@/lib/ai/providers";
 import { createDocument } from "@/lib/ai/tools/create-document";
@@ -31,6 +33,7 @@ import {
 } from "@/lib/db/queries";
 import type { DBMessage } from "@/lib/db/schema";
 import { ChatbotError } from "@/lib/errors";
+import { checkIpRateLimit } from "@/lib/ratelimit";
 import type { ChatMessage } from "@/lib/types";
 import { convertToUIMessages, generateUUID } from "@/lib/utils";
 import { generateTitleFromUserMessage } from "../../actions";
@@ -62,20 +65,30 @@ export async function POST(request: Request) {
     const { id, message, messages, selectedChatModel, selectedVisibilityType } =
       requestBody;
 
-    const session = await auth();
+    const [botResult, session] = await Promise.all([checkBotId(), auth()]);
+
+    if (botResult.isBot) {
+      return new ChatbotError("unauthorized:chat").toResponse();
+    }
 
     if (!session?.user) {
       return new ChatbotError("unauthorized:chat").toResponse();
     }
 
+    if (!allowedModelIds.has(selectedChatModel)) {
+      return new ChatbotError("bad_request:api").toResponse();
+    }
+
+    await checkIpRateLimit(ipAddress(request));
+
     const userType: UserType = session.user.type;
 
     const messageCount = await getMessageCountByUserId({
       id: session.user.id,
-      differenceInHours: 24,
+      differenceInHours: 1,
     });
 
-    if (messageCount > entitlementsByUserType[userType].maxMessagesPerDay) {
+    if (messageCount > entitlementsByUserType[userType].maxMessagesPerHour) {
       return new ChatbotError("rate_limit:chat").toResponse();
     }
 
@@ -145,8 +158,9 @@ export async function POST(request: Request) {
     }
 
     const isReasoningModel =
-      selectedChatModel.includes("reasoning") ||
-      selectedChatModel.includes("thinking");
+      selectedChatModel.endsWith("-thinking") ||
+      (selectedChatModel.includes("reasoning") &&
+        !selectedChatModel.includes("non-reasoning"));
 
     const modelMessages = await convertToModelMessages(uiMessages);
 
@@ -185,7 +199,9 @@ export async function POST(request: Request) {
           },
         });
 
-        dataStream.merge(result.toUIMessageStream({ sendReasoning: true }));
+        dataStream.merge(
+          result.toUIMessageStream({ sendReasoning: isReasoningModel })
+        );
 
         if (titlePromise) {
           const title = await titlePromise;
@@ -231,7 +247,17 @@ export async function POST(request: Request) {
           });
         }
       },
-      onError: () => "Oops, an error occurred!",
+      onError: (error) => {
+        if (
+          error instanceof Error &&
+          error.message?.includes(
+            "AI Gateway requires a valid credit card on file to service requests"
+          )
+        ) {
+          return "AI Gateway requires a valid credit card on file to service requests. Please visit https://vercel.com/d?to=%2F%5Bteam%5D%2F%7E%2Fai%3Fmodal%3Dadd-credit-card to add a card and unlock your free credits.";
+        }
+        return "Oops, an error occurred!";
+      },
     });
 
     return createUIMessageStreamResponse({

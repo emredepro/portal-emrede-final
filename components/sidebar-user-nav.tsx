@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronsUpDown, LogIn, LogOut, Moon, Sun } from "lucide-react";
+import { LogIn, LogOut, Moon, Sun } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
@@ -43,7 +43,7 @@ export function SidebarUserNav({
                 size="lg"
                 className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
               >
-                <div className="size-8 animate-pulse rounded-lg bg-neutral-500/30" />
+                <div className="size-8 animate-pulse rounded-full bg-neutral-500/30" />
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="animate-pulse rounded-md bg-neutral-500/30 text-transparent">
                     Loading
@@ -61,17 +61,16 @@ export function SidebarUserNav({
               >
                 <Image
                   alt={user.email ?? "User Avatar"}
-                  className="size-8 rounded-lg"
+                  className="size-8 rounded-full"
                   height={32}
                   src={`https://avatar.vercel.sh/${user.email}`}
                   width={32}
                 />
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium" data-testid="user-email">
-                    {isGuest ? "Guest" : user?.email}
+                    {isGuest ? "Guest" : (user?.name ?? user?.email)}
                   </span>
                 </div>
-                <ChevronsUpDown className="ml-auto size-4" />
               </SidebarMenuButton>
             )}
           </DropdownMenuTrigger>

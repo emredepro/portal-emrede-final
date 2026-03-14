@@ -6,7 +6,6 @@ import { ThemeProvider } from "@/components/theme-provider";
 import "katex/dist/katex.min.css";
 
 import "./globals.css";
-import { SessionProvider } from "next-auth/react";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
 export const metadata: Metadata = {
@@ -83,7 +82,7 @@ export default function RootLayout({
             enableSystem
           >
             <Toaster position="top-center" />
-            <SessionProvider>{children}</SessionProvider>
+            {children}
           </ThemeProvider>
         </TooltipProvider>
         <Analytics />

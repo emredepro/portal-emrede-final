@@ -32,7 +32,6 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import type { AuthUser } from "@/lib/auth";
-import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -43,6 +42,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "./ui/alert-dialog";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 export function AppSidebar({ user }: { user: AuthUser | undefined }) {
   const router = useRouter();
@@ -73,20 +73,20 @@ export function AppSidebar({ user }: { user: AuthUser | undefined }) {
 
   return (
     <>
-      <Sidebar collapsible="icon" className="border-r-0 [&_[data-sidebar=menu-button]]:bg-transparent [&_[data-sidebar=menu-button]]:hover:bg-transparent [&_[data-sidebar=menu-button]]:active:bg-transparent [&_[data-sidebar=menu-button][data-active]]:bg-transparent">
+      <Sidebar
+        className="border-r-0 [&_[data-sidebar=menu-button]]:bg-transparent [&_[data-sidebar=menu-button]]:hover:bg-transparent [&_[data-sidebar=menu-button]]:active:bg-transparent [&_[data-sidebar=menu-button][data-active]]:bg-transparent"
+        collapsible="icon"
+      >
         <SidebarHeader>
           <SidebarMenu>
             <SidebarMenuItem className="flex flex-row items-center justify-between">
               <div className="group/logo relative">
                 <SidebarMenuButton
                   asChild
-                  tooltip="Chatbot"
                   className="size-8 group-data-[collapsible=icon]:group-hover/logo:opacity-0"
+                  tooltip="Chatbot"
                 >
-                  <Link
-                    href="/"
-                    onClick={() => setOpenMobile(false)}
-                  >
+                  <Link href="/" onClick={() => setOpenMobile(false)}>
                     <MessageSquareIcon />
                   </Link>
                 </SidebarMenuButton>
@@ -99,9 +99,7 @@ export function AppSidebar({ user }: { user: AuthUser | undefined }) {
                       <PanelLeftIcon />
                     </SidebarMenuButton>
                   </TooltipTrigger>
-                  <TooltipContent side="right">
-                    Open sidebar
-                  </TooltipContent>
+                  <TooltipContent side="right">Open sidebar</TooltipContent>
                 </Tooltip>
               </div>
               <div className="group-data-[collapsible=icon]:hidden">

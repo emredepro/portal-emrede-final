@@ -28,7 +28,7 @@ export function SidebarUserNav({
 }) {
   const router = useRouter();
   const { isMobile } = useSidebar();
-  const { data, status } = useSession();
+  const { data, isPending } = useSession();
   const { setTheme, resolvedTheme } = useTheme();
 
   const isGuest = data?.user?.isAnonymous ?? user.isAnonymous ?? false;
@@ -38,10 +38,10 @@ export function SidebarUserNav({
       <SidebarMenuItem>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            {status === "loading" ? (
+            {isPending ? (
               <SidebarMenuButton
-                size="lg"
                 className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                size="lg"
               >
                 <div className="size-8 animate-pulse rounded-full bg-neutral-500/30" />
                 <div className="grid flex-1 text-left text-sm leading-tight">
@@ -55,9 +55,9 @@ export function SidebarUserNav({
               </SidebarMenuButton>
             ) : (
               <SidebarMenuButton
-                size="lg"
                 className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                 data-testid="user-nav-button"
+                size="lg"
               >
                 <Image
                   alt={user.email ?? "User Avatar"}
@@ -67,18 +67,21 @@ export function SidebarUserNav({
                   width={32}
                 />
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium" data-testid="user-email">
-                    {isGuest ? "Guest" : (user?.name ?? user?.email)}
+                  <span
+                    className="truncate font-medium"
+                    data-testid="user-email"
+                  >
+                    {isGuest ? "Guest" : user?.email}
                   </span>
                 </div>
               </SidebarMenuButton>
             )}
           </DropdownMenuTrigger>
           <DropdownMenuContent
+            align="end"
             className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
             data-testid="user-nav-menu"
             side={isMobile ? "bottom" : "right"}
-            align="end"
             sideOffset={4}
           >
             <DropdownMenuItem
@@ -92,14 +95,11 @@ export function SidebarUserNav({
               {`Toggle ${resolvedTheme === "light" ? "dark" : "light"} mode`}
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem
-              asChild
-              data-testid="user-nav-item-auth"
-            >
+            <DropdownMenuItem asChild data-testid="user-nav-item-auth">
               <button
                 className="w-full cursor-pointer"
                 onClick={() => {
-                  if (status === "loading") {
+                  if (isPending) {
                     toast({
                       type: "error",
                       description:

@@ -2,7 +2,7 @@
 
 import type { UseChatHelpers } from "@ai-sdk/react";
 import { useEffect } from "react";
-import { useDataStream } from "@/components/data-stream-provider";
+import { useDataStream } from "@/components/chat/data-stream-provider";
 import type { ChatMessage } from "@/lib/types";
 
 export type UseAutoResumeParams = {
@@ -31,8 +31,6 @@ export function useAutoResume({
       resumeStream();
     }
 
-    // we intentionally run this once
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [autoResume, initialMessages.at, resumeStream]);
 
   useEffect(() => {

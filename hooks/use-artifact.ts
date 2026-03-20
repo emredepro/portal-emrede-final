@@ -2,7 +2,7 @@
 
 import { useCallback, useMemo } from "react";
 import useSWR from "swr";
-import type { UIArtifact } from "@/components/artifact";
+import type { UIArtifact } from "@/components/chat/artifact";
 
 export const initialArtifactData: UIArtifact = {
   documentId: "init",
@@ -68,6 +68,7 @@ export function useArtifact() {
   );
 
   const { data: localArtifactMetadata, mutate: setLocalArtifactMetadata } =
+    // biome-ignore lint/suspicious/noExplicitAny: metadata type varies per artifact kind
     useSWR<any>(
       () =>
         artifact.documentId ? `artifact-metadata-${artifact.documentId}` : null,

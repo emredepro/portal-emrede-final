@@ -1,7 +1,7 @@
 import { withBotId } from "botid/next/config";
 import type { NextConfig } from "next";
 
-const basePath = process.env.DEMO ? "/demo" : "";
+const basePath = process.env.IS_DEMO === "1" ? "/demo" : "";
 
 const nextConfig: NextConfig = {
   ...(basePath ? { basePath, assetPrefix: "/demo-assets" } : {}),

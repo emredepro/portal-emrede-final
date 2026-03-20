@@ -5,15 +5,16 @@ export async function GET() {
     "Cache-Control": "public, max-age=86400, s-maxage=86400",
   };
 
+  const curatedCapabilities = await getCapabilities();
+
   if (isDemo) {
     const models = await getAllGatewayModels();
     const capabilities = Object.fromEntries(
-      models.map((m) => [m.id, m.capabilities])
+      models.map((m) => [m.id, curatedCapabilities[m.id] ?? m.capabilities])
     );
 
     return Response.json({ capabilities, models }, { headers });
   }
 
-  const capabilities = await getCapabilities();
-  return Response.json(capabilities, { headers });
+  return Response.json(curatedCapabilities, { headers });
 }

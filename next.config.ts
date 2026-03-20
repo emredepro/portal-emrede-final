@@ -1,11 +1,10 @@
 import { withBotId } from "botid/next/config";
 import type { NextConfig } from "next";
 
-const basePath = "/demo";
+const basePath = process.env.DEMO ? "/demo" : "";
 
 const nextConfig: NextConfig = {
-  basePath,
-  assetPrefix: "/demo-assets",
+  ...(basePath ? { basePath, assetPrefix: "/demo-assets" } : {}),
   env: {
     NEXT_PUBLIC_BASE_PATH: basePath,
   },

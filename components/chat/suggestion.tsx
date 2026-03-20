@@ -19,8 +19,15 @@ export const SuggestionDialog = ({
     <AnimatePresence>
       <div className="sticky inset-0 z-40 h-full w-full">
         <div
+          aria-hidden="true"
           className="absolute inset-0 bg-black/20 backdrop-blur-[2px]"
           onClick={onClose}
+          onKeyDown={(e) => {
+            if (e.key === "Escape") {
+              onClose();
+            }
+          }}
+          role="presentation"
         />
         <motion.div
           animate={{ opacity: 1, scale: 1 }}

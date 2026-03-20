@@ -16,7 +16,13 @@ import { cn, fetcher } from "@/lib/utils";
 import type { ArtifactKind, UIArtifact } from "./artifact";
 import { CodeEditor } from "./code-editor";
 import { InlineDocumentSkeleton } from "./document-skeleton";
-import { CodeIcon, FileIcon, FullscreenIcon, ImageIcon, LoaderIcon } from "./icons";
+import {
+  CodeIcon,
+  FileIcon,
+  FullscreenIcon,
+  ImageIcon,
+  LoaderIcon,
+} from "./icons";
 import { ImageEditor } from "./image-editor";
 import { SpreadsheetEditor } from "./sheet-editor";
 import { Editor } from "./text-editor";

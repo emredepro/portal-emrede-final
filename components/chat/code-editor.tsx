@@ -60,9 +60,13 @@ function PureCodeEditor({ content, onSaveContent, status }: EditorProps) {
 
       const scrollListener = EditorView.domEventHandlers({
         scroll() {
-          if (status !== "streaming") return;
+          if (status !== "streaming") {
+            return;
+          }
           const dom = editorRef.current?.scrollDOM;
-          if (!dom) return;
+          if (!dom) {
+            return;
+          }
           const atBottom =
             dom.scrollHeight - dom.scrollTop - dom.clientHeight < 40;
           userScrolledRef.current = !atBottom;

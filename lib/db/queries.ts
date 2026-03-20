@@ -33,7 +33,7 @@ import {
 } from "./schema";
 import { generateHashedPassword } from "./utils";
 
-const client = postgres(process.env.POSTGRES_URL!);
+const client = postgres(process.env.POSTGRES_URL ?? "");
 const db = drizzle(client);
 
 export async function getUser(email: string): Promise<User[]> {
@@ -369,12 +369,12 @@ export async function updateDocumentContent({
     return await db
       .update(document)
       .set({ content })
-      .where(
-        and(eq(document.id, id), eq(document.createdAt, latest.createdAt))
-      )
+      .where(and(eq(document.id, id), eq(document.createdAt, latest.createdAt)))
       .returning();
   } catch (_error) {
-    if (_error instanceof ChatbotError) throw _error;
+    if (_error instanceof ChatbotError) {
+      throw _error;
+    }
     throw new ChatbotError(
       "bad_request:database",
       "Failed to update document content"

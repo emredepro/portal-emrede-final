@@ -64,9 +64,10 @@ export const updateDocument = ({
         id,
         title: document.title,
         kind: document.kind,
-        content: document.kind === "code"
-          ? "The script has been updated successfully."
-          : "The document has been updated successfully.",
+        content:
+          document.kind === "code"
+            ? "The script has been updated successfully."
+            : "The document has been updated successfully.",
       };
     },
   });

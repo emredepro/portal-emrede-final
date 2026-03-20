@@ -92,7 +92,7 @@ export async function getCapabilities(): Promise<
       try {
         const res = await fetch(
           `https://ai-gateway.vercel.sh/v1/models/${model.id}/endpoints`,
-          { next: { revalidate: 86400 } }
+          { next: { revalidate: 86_400 } }
         );
         if (!res.ok) {
           return [model.id, { tools: false, vision: false, reasoning: false }];
@@ -145,9 +145,11 @@ export async function getAllGatewayModels(): Promise<
 > {
   try {
     const res = await fetch("https://ai-gateway.vercel.sh/v1/models", {
-      next: { revalidate: 86400 },
+      next: { revalidate: 86_400 },
     });
-    if (!res.ok) return [];
+    if (!res.ok) {
+      return [];
+    }
 
     const json = await res.json();
     return (json.data ?? [])

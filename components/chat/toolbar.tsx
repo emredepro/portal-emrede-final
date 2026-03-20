@@ -371,7 +371,10 @@ const PureToolbar = ({
   }
 
   const toolsByArtifactKind = consoleError
-    ? [createFixErrorTool(consoleError, documentId), ...artifactDefinition.toolbar.slice(1)]
+    ? [
+        createFixErrorTool(consoleError, documentId),
+        ...artifactDefinition.toolbar.slice(1),
+      ]
     : artifactDefinition.toolbar;
 
   if (toolsByArtifactKind.length === 0) {

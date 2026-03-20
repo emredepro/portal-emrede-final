@@ -114,11 +114,15 @@ function PureArtifact({
       userScrolledArtifact.current = false;
       return;
     }
-    if (userScrolledArtifact.current) return;
+    if (userScrolledArtifact.current) {
+      return;
+    }
     const el = artifactContentRef.current;
-    if (!el) return;
+    if (!el) {
+      return;
+    }
     el.scrollTo({ top: el.scrollHeight });
-  }, [artifact.status, artifact.content]);
+  }, [artifact.status]);
 
   useEffect(() => {
     if (documents && documents.length > 0) {
@@ -344,13 +348,16 @@ function PureArtifact({
       <div
         className="relative flex-1 overflow-y-auto bg-background"
         data-slot="artifact-content"
-        ref={artifactContentRef}
         onScroll={() => {
           const el = artifactContentRef.current;
-          if (!el) return;
-          const atBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 40;
+          if (!el) {
+            return;
+          }
+          const atBottom =
+            el.scrollHeight - el.scrollTop - el.clientHeight < 40;
           userScrolledArtifact.current = !atBottom;
         }}
+        ref={artifactContentRef}
       >
         <artifactDefinition.content
           content={

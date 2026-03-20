@@ -77,10 +77,7 @@ export const textArtifact = new Artifact<"text", TextArtifactMetadata>({
 
       return (
         <div className="flex flex-row px-4 py-8 md:px-16 md:py-12 lg:px-20">
-          <DiffView
-            newContent={selectedContent}
-            oldContent={prevContent}
-          />
+          <DiffView newContent={selectedContent} oldContent={prevContent} />
         </div>
       );
     }

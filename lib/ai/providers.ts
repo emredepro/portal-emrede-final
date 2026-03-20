@@ -1,6 +1,6 @@
 import { customProvider, gateway } from "ai";
-import { titleModel } from "./models";
 import { isTestEnvironment } from "../constants";
+import { titleModel } from "./models";
 
 export const myProvider = isTestEnvironment
   ? (() => {

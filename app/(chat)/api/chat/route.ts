@@ -316,7 +316,9 @@ export async function POST(request: Request) {
               () => sseStream
             );
           }
-        } catch {}
+        } catch (_) {
+          /* non-critical */
+        }
       },
     });
   } catch (error) {

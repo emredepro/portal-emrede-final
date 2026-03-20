@@ -3,7 +3,13 @@
 import type { UseChatHelpers } from "@ai-sdk/react";
 import type { UIMessage } from "ai";
 import equal from "fast-deep-equal";
-import { ArrowUpIcon, BrainIcon, EyeIcon, LockIcon, WrenchIcon } from "lucide-react";
+import {
+  ArrowUpIcon,
+  BrainIcon,
+  EyeIcon,
+  LockIcon,
+  WrenchIcon,
+} from "lucide-react";
 import {
   type ChangeEvent,
   type Dispatch,
@@ -28,11 +34,6 @@ import {
   ModelSelectorName,
   ModelSelectorTrigger,
 } from "@/components/ai-elements/model-selector";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import {
   type ChatModel,
   chatModels,
@@ -547,16 +548,27 @@ function PureModelSelectorCompact({
                 ]
               : chatModels;
 
-            const grouped: Record<string, { model: ChatModel; curated: boolean }[]> = {};
+            const grouped: Record<
+              string,
+              { model: ChatModel; curated: boolean }[]
+            > = {};
             for (const model of allModels) {
-              const key = curatedIds.has(model.id) ? "_available" : model.provider;
-              if (!grouped[key]) grouped[key] = [];
+              const key = curatedIds.has(model.id)
+                ? "_available"
+                : model.provider;
+              if (!grouped[key]) {
+                grouped[key] = [];
+              }
               grouped[key].push({ model, curated: curatedIds.has(model.id) });
             }
 
             const sortedKeys = Object.keys(grouped).sort((a, b) => {
-              if (a === "_available") return -1;
-              if (b === "_available") return 1;
+              if (a === "_available") {
+                return -1;
+              }
+              if (b === "_available") {
+                return 1;
+              }
               return a.localeCompare(b);
             });
 
@@ -587,7 +599,11 @@ function PureModelSelectorCompact({
 
             return sortedKeys.map((key) => (
               <ModelSelectorGroup
-                heading={key === "_available" ? "Available" : (providerNames[key] ?? key)}
+                heading={
+                  key === "_available"
+                    ? "Available"
+                    : (providerNames[key] ?? key)
+                }
                 key={key}
               >
                 {grouped[key].map(({ model, curated }) => {
@@ -602,7 +618,9 @@ function PureModelSelectorCompact({
                       )}
                       key={model.id}
                       onSelect={() => {
-                        if (!curated) return;
+                        if (!curated) {
+                          return;
+                        }
                         onModelChange?.(model.id);
                         setCookie("chat-model", model.id);
                         setOpen(false);

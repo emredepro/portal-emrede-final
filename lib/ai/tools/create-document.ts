@@ -80,9 +80,10 @@ export const createDocument = ({
         id,
         title,
         kind,
-        content: kind === "code"
-          ? "A script was created and is now visible to the user."
-          : "A document was created and is now visible to the user.",
+        content:
+          kind === "code"
+            ? "A script was created and is now visible to the user."
+            : "A document was created and is now visible to the user.",
       };
     },
   });

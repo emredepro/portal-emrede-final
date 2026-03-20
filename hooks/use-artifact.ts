@@ -68,7 +68,6 @@ export function useArtifact() {
   );
 
   const { data: localArtifactMetadata, mutate: setLocalArtifactMetadata } =
-    // biome-ignore lint/suspicious/noExplicitAny: metadata type varies per artifact kind
     useSWR<any>(
       () =>
         artifact.documentId ? `artifact-metadata-${artifact.documentId}` : null,

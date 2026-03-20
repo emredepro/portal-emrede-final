@@ -141,9 +141,7 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
       if (chatHistories) {
         return chatHistories.map((chatHistory) => ({
           ...chatHistory,
-          chats: chatHistory.chats.filter(
-            (chat) => chat.id !== chatToDelete
-          ),
+          chats: chatHistory.chats.filter((chat) => chat.id !== chatToDelete),
         }));
       }
     });

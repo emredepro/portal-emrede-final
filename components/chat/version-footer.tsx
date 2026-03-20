@@ -1,15 +1,14 @@
 "use client";
 
 import { isAfter } from "date-fns";
-import { ChevronLeftIcon, ChevronRightIcon, DiffIcon } from "lucide-react";
 import { motion } from "framer-motion";
+import { ChevronLeftIcon, ChevronRightIcon, DiffIcon } from "lucide-react";
 import type { Dispatch, SetStateAction } from "react";
 import { useState } from "react";
 import { useSWRConfig } from "swr";
 import { useArtifact } from "@/hooks/use-artifact";
 import type { Document } from "@/lib/db/schema";
-import { cn } from "@/lib/utils";
-import { getDocumentTimestampByIndex } from "@/lib/utils";
+import { cn, getDocumentTimestampByIndex } from "@/lib/utils";
 import { LoaderIcon } from "./icons";
 
 type VersionFooterProps = {

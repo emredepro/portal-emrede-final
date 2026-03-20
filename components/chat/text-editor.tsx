@@ -46,8 +46,9 @@ function PureEditor({
 }: EditorProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const editorRef = useRef<EditorView | null>(null);
-  const [activeSuggestion, setActiveSuggestion] =
-    useState<UISuggestion | null>(null);
+  const [activeSuggestion, setActiveSuggestion] = useState<UISuggestion | null>(
+    null
+  );
   const suggestionsRef = useRef<UISuggestion[]>([]);
 
   useEffect(() => {
@@ -170,7 +171,9 @@ function PureEditor({
   }, [suggestions, content]);
 
   const handleApply = useCallback(() => {
-    if (!editorRef.current || !activeSuggestion) return;
+    if (!editorRef.current || !activeSuggestion) {
+      return;
+    }
 
     const { state, dispatch } = editorRef.current;
     const currentState = suggestionsPluginKey.getState(state);

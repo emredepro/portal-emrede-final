@@ -22,7 +22,9 @@ export const editDocument = ({ dataStream }: EditDocumentProps) =>
       replace_all: z
         .boolean()
         .optional()
-        .describe("Replace all occurrences instead of just the first (default false)"),
+        .describe(
+          "Replace all occurrences instead of just the first (default false)"
+        ),
     }),
     execute: async ({ id, old_string, new_string, replace_all }) => {
       const document = await getDocumentById({ id });
@@ -83,9 +85,10 @@ export const editDocument = ({ dataStream }: EditDocumentProps) =>
         id,
         title: document.title,
         kind: document.kind,
-        content: document.kind === "code"
-          ? "The script has been edited successfully."
-          : "The document has been edited successfully.",
+        content:
+          document.kind === "code"
+            ? "The script has been edited successfully."
+            : "The document has been edited successfully.",
       };
     },
   });

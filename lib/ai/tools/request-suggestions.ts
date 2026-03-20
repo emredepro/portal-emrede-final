@@ -37,6 +37,10 @@ export const requestSuggestions = ({
         };
       }
 
+      if (document.userId !== session.user?.id) {
+        return { error: "Forbidden" };
+      }
+
       const suggestions: Omit<
         Suggestion,
         "userId" | "createdAt" | "documentCreatedAt"

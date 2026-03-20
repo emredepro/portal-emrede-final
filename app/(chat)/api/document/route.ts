@@ -1,3 +1,4 @@
+import { z } from "zod";
 import { auth } from "@/app/(auth)/auth";
 import type { ArtifactKind } from "@/components/chat/artifact";
 import {
@@ -7,6 +8,13 @@ import {
   updateDocumentContent,
 } from "@/lib/db/queries";
 import { ChatbotError } from "@/lib/errors";
+
+const documentSchema = z.object({
+  content: z.string(),
+  title: z.string(),
+  kind: z.enum(["text", "code", "image", "sheet"]),
+  isManualEdit: z.boolean().optional(),
+});
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -57,17 +65,23 @@ export async function POST(request: Request) {
     return new ChatbotError("not_found:document").toResponse();
   }
 
-  const {
-    content,
-    title,
-    kind,
-    isManualEdit,
-  }: {
-    content: string;
-    title: string;
-    kind: ArtifactKind;
-    isManualEdit?: boolean;
-  } = await request.json();
+  let content: string;
+  let title: string;
+  let kind: ArtifactKind;
+  let isManualEdit: boolean | undefined;
+
+  try {
+    const parsed = documentSchema.parse(await request.json());
+    content = parsed.content;
+    title = parsed.title;
+    kind = parsed.kind;
+    isManualEdit = parsed.isManualEdit;
+  } catch {
+    return new ChatbotError(
+      "bad_request:api",
+      "Invalid request body."
+    ).toResponse();
+  }
 
   const documents = await getDocumentsById({ id });
 

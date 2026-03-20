@@ -22,7 +22,7 @@ export async function proxy(request: NextRequest) {
   const base = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
   if (!token) {
-    const redirectUrl = encodeURIComponent(request.url);
+    const redirectUrl = encodeURIComponent(new URL(request.url).pathname);
 
     return NextResponse.redirect(
       new URL(`${base}/api/auth/guest?redirectUrl=${redirectUrl}`, request.url)

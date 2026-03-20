@@ -35,6 +35,10 @@ export const updateDocument = ({
         };
       }
 
+      if (document.userId !== session.user?.id) {
+        return { error: "Forbidden" };
+      }
+
       dataStream.write({
         type: "data-clear",
         data: null,

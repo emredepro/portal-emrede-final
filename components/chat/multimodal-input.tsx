@@ -176,19 +176,33 @@ function PureMultimodalInput({
         setTheme(resolvedTheme === "dark" ? "light" : "dark");
         break;
       case "delete":
-        fetch(
-          `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/api/chat?id=${chatId}`,
-          { method: "DELETE" }
-        );
-        router.push("/");
-        toast.success("Chat deleted");
+        toast("Delete this chat?", {
+          action: {
+            label: "Delete",
+            onClick: () => {
+              fetch(
+                `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/api/chat?id=${chatId}`,
+                { method: "DELETE" }
+              );
+              router.push("/");
+              toast.success("Chat deleted");
+            },
+          },
+        });
         break;
       case "purge":
-        fetch(`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/api/history`, {
-          method: "DELETE",
+        toast("Delete all chats?", {
+          action: {
+            label: "Delete all",
+            onClick: () => {
+              fetch(`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/api/history`, {
+                method: "DELETE",
+              });
+              router.push("/");
+              toast.success("All chats deleted");
+            },
+          },
         });
-        router.push("/");
-        toast.success("All chats deleted");
         break;
       default:
         break;

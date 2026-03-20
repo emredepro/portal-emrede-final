@@ -1,6 +1,13 @@
+import { z } from "zod";
 import { auth } from "@/app/(auth)/auth";
 import { getChatById, getVotesByChatId, voteMessage } from "@/lib/db/queries";
 import { ChatbotError } from "@/lib/errors";
+
+const voteSchema = z.object({
+  chatId: z.string(),
+  messageId: z.string(),
+  type: z.enum(["up", "down"]),
+});
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -35,14 +42,16 @@ export async function GET(request: Request) {
 }
 
 export async function PATCH(request: Request) {
-  const {
-    chatId,
-    messageId,
-    type,
-  }: { chatId: string; messageId: string; type: "up" | "down" } =
-    await request.json();
+  let chatId: string;
+  let messageId: string;
+  let type: "up" | "down";
 
-  if (!chatId || !messageId || !type) {
+  try {
+    const parsed = voteSchema.parse(await request.json());
+    chatId = parsed.chatId;
+    messageId = parsed.messageId;
+    type = parsed.type;
+  } catch {
     return new ChatbotError(
       "bad_request:api",
       "Parameters chatId, messageId, and type are required."

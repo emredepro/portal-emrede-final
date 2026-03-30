@@ -7,9 +7,11 @@ import { ArrowRight } from "lucide-react";
 
 export default function HomePage() {
   const [isAdvanced, setIsAdvanced] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const [year, setYear] = useState<number | null>(null);
 
   useEffect(() => {
+    setMounted(true);
     setYear(new Date().getFullYear());
   }, []);
 
@@ -17,18 +19,23 @@ export default function HomePage() {
     bg: "#0f1015",
     azulNeon: "#12f2f2",
     vinho: "#8e1e44",
-    offWhite: "#f3dfd4",
   };
 
+  // Se ainda não estiver no navegador, renderizamos um fundo preto simples
+  // Isso impede o erro de Math.random() e Prerender da Vercel
+  if (!mounted) return <div className="min-h-screen bg-[#0f1015]" />;
+
   return (
-    <main className="min-h-screen bg-[#0f1015] text-white flex flex-col items-center justify-center px-6 relative overflow-hidden">
-      {/* Glow de Fundo Estático (Substitui o Math.random) */}
+    <main className="min-h-screen bg-[#0f1015] text-white flex flex-col items-center justify-center px-6 relative overflow-hidden font-sora">
+      
+      {/* Glow de Fundo dinâmico */}
       <motion.div 
         animate={{ 
           backgroundColor: isAdvanced ? colors.vinho : colors.azulNeon,
           opacity: isAdvanced ? 0.12 : 0.18 
         }}
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-[130px] transition-colors duration-1000 pointer-events-none"
+        transition={{ duration: 1 }}
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-[130px] pointer-events-none"
       />
 
       <div className="relative z-10 max-w-4xl w-full text-center">
@@ -37,7 +44,7 @@ export default function HomePage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <h1 className="text-6xl md:text-8xl font-extrabold tracking-tighter mb-6 select-none font-sora">
+          <h1 className="text-6xl md:text-8xl font-extrabold tracking-tighter mb-6 select-none">
             EMREDE <span 
               style={{ color: isAdvanced ? colors.vinho : colors.azulNeon }} 
               className="transition-colors duration-700"
@@ -46,7 +53,7 @@ export default function HomePage() {
             </span>
           </h1>
           
-          <p className="text-zinc-400 text-lg md:text-xl max-w-2xl mx-auto mb-16 font-light leading-relaxed font-sora">
+          <p className="text-zinc-400 text-lg md:text-xl max-w-2xl mx-auto mb-16 font-light leading-relaxed">
             Inteligência tecnológica para <span className="text-white font-medium">transmutar</span> carreiras musicais através de dados e estratégia de elite.
           </p>
         </motion.div>
@@ -64,7 +71,7 @@ export default function HomePage() {
               className="absolute w-[150px] h-16 rounded-full shadow-lg"
             />
             
-            <div className="flex justify-around w-full z-10 font-bold text-[10px] uppercase tracking-[0.2em] transition-colors duration-500 select-none font-sora">
+            <div className="flex justify-around w-full z-10 font-bold text-[10px] uppercase tracking-[0.2em] transition-colors duration-500 select-none">
               <span className={!isAdvanced ? "text-black" : "text-zinc-500"}>Underground</span>
               <span className={isAdvanced ? "text-white" : "text-zinc-600"}>Estruturado</span>
             </div>
@@ -77,7 +84,7 @@ export default function HomePage() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
-                className="text-zinc-500 italic text-sm md:text-base font-light font-sora"
+                className="text-zinc-500 italic text-sm md:text-base font-light"
               >
                 {isAdvanced 
                   ? "“Tenho estrutura e busco alcançar voos maiores.”" 
@@ -90,7 +97,7 @@ export default function HomePage() {
         <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
           <Link 
             href="/login" 
-            className="group relative inline-flex items-center gap-4 bg-white text-black px-14 py-6 rounded-full font-bold text-xl transition-all hover:bg-[#f3dfd4] font-sora"
+            className="group relative inline-flex items-center gap-4 bg-white text-black px-14 py-6 rounded-full font-bold text-xl transition-all hover:bg-[#f3dfd4]"
           >
             Iniciar Análise SWOT
             <ArrowRight className="w-6 h-6 transition-transform group-hover:translate-x-1" />
@@ -98,8 +105,8 @@ export default function HomePage() {
         </motion.div>
       </div>
 
-      <footer className="mt-32 text-zinc-800 text-[10px] tracking-[0.5em] uppercase font-bold font-sora">
-        © {year || ''} EMREDE PRO / Transmutação Constante
+      <footer className="mt-32 text-zinc-800 text-[10px] tracking-[0.5em] uppercase font-bold">
+        © {year} EMREDE PRO / Transmutação Constante
       </footer>
 
       <style jsx global>{`

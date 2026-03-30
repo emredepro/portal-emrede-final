@@ -4,7 +4,8 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 export default function HomePage() {
-  const [year, setYear] = useState(new Date().getFullYear());
+  // Começamos com null para o Next.js não reclamar da diferença de tempo entre servidor e cliente
+  const [year, setYear] = useState<number | null>(null);
 
   useEffect(() => {
     setYear(new Date().getFullYear());
@@ -36,7 +37,7 @@ export default function HomePage() {
       </div>
 
       <footer className="mt-20 text-zinc-600 text-sm">
-        © {year} Emrede Pro. Todos os direitos reservados.
+        © {year || ''} Emrede Pro. Todos os direitos reservados.
       </footer>
     </div>
   );

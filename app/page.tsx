@@ -1,9 +1,18 @@
+"use client";
+
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 export default function HomePage() {
+  const [year, setYear] = useState(new Date().getFullYear());
+
+  useEffect(() => {
+    setYear(new Date().getFullYear());
+  }, []);
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white px-4">
-      {/* Aqui depois você pode colocar sua logo */}
+      {/* Logo Emrede */}
       <div className="mb-8 w-24 h-24 bg-zinc-900 rounded-2xl flex items-center justify-center border border-zinc-800">
         <span className="text-3xl font-bold text-zinc-400">E</span>
       </div>
@@ -27,7 +36,7 @@ export default function HomePage() {
       </div>
 
       <footer className="mt-20 text-zinc-600 text-sm">
-        © {new Date().getFullYear()} Emrede Pro. Todos os direitos reservados.
+        © {year} Emrede Pro. Todos os direitos reservados.
       </footer>
     </div>
   );

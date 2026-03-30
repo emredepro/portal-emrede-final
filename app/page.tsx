@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { ArrowRight, Menu, X } from "lucide-react";
 
@@ -11,7 +12,6 @@ export default function HomePage() {
   const [year, setYear] = useState<number | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // Controle de Scroll para o Menu
   const { scrollY } = useScroll();
   const headerOpacity = useTransform(scrollY, [0, 100], [0, 1]);
   const headerY = useTransform(scrollY, [0, 100], [-20, 0]);
@@ -32,7 +32,7 @@ export default function HomePage() {
     { name: "Sobre", href: "#" },
     { name: "Consultoria & Mentoria", href: "#" },
     { name: "Serviços & Combos", href: "#" },
-    { name: "Hub", href: "#" }, // Novo item incluído
+    { name: "Hub", href: "#" },
     { name: "Contato", href: "#" },
   ];
 
@@ -47,11 +47,19 @@ export default function HomePage() {
         className="fixed top-6 z-[100] w-full max-w-5xl px-4 pointer-events-auto"
       >
         <nav className="bg-zinc-900/60 backdrop-blur-xl border border-zinc-800/50 rounded-full px-8 py-3 flex items-center justify-between shadow-2xl">
-          <div className="text-sm font-bold tracking-tighter">
-            EMREDE <span style={{ color: isAdvanced ? colors.vinho : colors.azulNeon }}>PRO</span>
-          </div>
           
-          {/* Desktop Menu */}
+          {/* LOGO EMREDE PRO */}
+          <Link href="/" className="flex items-center">
+            <Image 
+              src="/Prancheta 6.png" 
+              alt="Logo Emrede Pro"
+              width={160} 
+              height={50}
+              className="h-10 w-auto object-contain transition-all"
+              priority 
+            />
+          </Link>
+          
           <ul className="hidden md:flex gap-6 text-[10px] uppercase tracking-widest font-bold text-zinc-400">
             {navItems.map((item) => (
               <li key={item.name}>
@@ -67,7 +75,6 @@ export default function HomePage() {
             Acessar
           </Link>
 
-          {/* Mobile Trigger */}
           <button className="md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
             <Menu className="w-5 h-5" />
           </button>
@@ -76,7 +83,6 @@ export default function HomePage() {
 
       {/* HERO SECTION */}
       <section className="min-h-screen flex flex-col items-center justify-center text-center relative w-full max-w-4xl">
-        {/* Glow de Fundo 20% */}
         <motion.div 
           animate={{ 
             backgroundColor: isAdvanced ? colors.vinho : colors.azulNeon,
@@ -91,7 +97,7 @@ export default function HomePage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <h1 className="text-6xl md:text-8xl font-extrabold tracking-tighter mb-6 select-none">
+          <h1 className="text-6xl md:text-8xl font-extrabold tracking-tighter mb-6 select-none relative z-10">
             EMREDE <span 
               style={{ color: isAdvanced ? colors.vinho : colors.azulNeon }} 
               className="transition-colors duration-700"
@@ -100,13 +106,13 @@ export default function HomePage() {
             </span>
           </h1>
           
-          <p className="text-zinc-400 text-lg md:text-xl max-w-2xl mx-auto mb-16 font-light leading-relaxed">
+          <p className="text-zinc-400 text-lg md:text-xl max-w-2xl mx-auto mb-16 font-light leading-relaxed relative z-10">
             Inteligência tecnológica para <span className="text-white font-medium">transmutar</span> carreiras musicais através de dados e estratégia de elite.
           </p>
         </motion.div>
 
         {/* TOGGLE DE MATURIDADE */}
-        <div className="flex flex-col items-center gap-10 mb-20">
+        <div className="flex flex-col items-center gap-10 mb-20 relative z-10">
           <div 
             onClick={() => setIsAdvanced(!isAdvanced)}
             className="w-80 h-20 bg-zinc-900/40 border border-zinc-800/50 rounded-full p-2 cursor-pointer relative flex items-center backdrop-blur-md"
@@ -141,7 +147,7 @@ export default function HomePage() {
           </div>
         </div>
 
-        <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+        <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="relative z-10">
           <Link 
             href="/login" 
             className="group relative inline-flex items-center gap-4 bg-white text-black px-14 py-6 rounded-full font-bold text-xl transition-all hover:bg-[#f3dfd4]"
@@ -152,7 +158,6 @@ export default function HomePage() {
         </motion.div>
       </section>
 
-      {/* FOOTER */}
       <footer className="py-20 text-zinc-800 text-[10px] tracking-[0.5em] uppercase font-bold w-full text-center relative z-10">
         © {year} EMREDE PRO / Transmutação Constante
       </footer>

@@ -44,24 +44,24 @@ export default function HomePage() {
       {/* MENU INTELIGENTE */}
       <motion.header 
         style={{ opacity: headerOpacity, y: headerY }}
-        className="fixed top-6 z-[100] w-full max-w-5xl px-4 pointer-events-auto"
+        className="fixed top-6 z-[100] w-full max-w-6xl px-4 pointer-events-auto"
       >
-        <nav className="bg-zinc-900/60 backdrop-blur-xl border border-zinc-800/50 rounded-full px-8 py-3 flex items-center justify-between shadow-2xl">
+        <nav className="bg-zinc-900/60 backdrop-blur-xl border border-zinc-800/50 rounded-full px-10 py-4 flex items-center justify-between shadow-2xl">
           
-          {/* LOGO EMREDE PRO - ATUALIZADA PARA H-13 */}
+          {/* LOGO EMREDE PRO - AGORA EM H-18 */}
           <Link href="/" className="flex items-center">
             <Image 
               src="/Prancheta 6.png" 
               alt="Logo Emrede Pro"
-              width={180} 
-              height={52}
-              className="h-13 w-auto object-contain transition-all"
+              width={220} 
+              height={72}
+              className="h-18 w-auto object-contain transition-all"
               priority 
             />
           </Link>
           
           {/* Desktop Menu com Efeito de Caixa no Hover */}
-          <ul className="hidden md:flex gap-2 text-[10px] uppercase tracking-widest font-bold text-zinc-400">
+          <ul className="hidden xl:flex gap-1 text-[10px] uppercase tracking-widest font-bold text-zinc-400">
             {navItems.map((item) => (
               <li key={item.name}>
                 <Link 
@@ -76,13 +76,14 @@ export default function HomePage() {
 
           <Link 
             href="/login" 
-            className="hidden md:block text-[10px] uppercase font-bold border border-white text-white px-6 py-2.5 rounded-full hover:bg-white hover:text-black transition-all duration-500"
+            className="hidden md:block text-[10px] uppercase font-bold border border-white text-white px-8 py-3 rounded-full hover:bg-white hover:text-black transition-all duration-500"
           >
             Acessar
           </Link>
 
-          <button className="md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-            <Menu className="w-5 h-5" />
+          {/* Mobile Trigger */}
+          <button className="xl:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+            <Menu className="w-6 h-6" />
           </button>
         </nav>
       </motion.header>
@@ -173,7 +174,7 @@ export default function HomePage() {
         {isMenuOpen && (
           <motion.div 
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[200] bg-black flex flex-col items-center justify-center p-8 md:hidden font-sora"
+            className="fixed inset-0 z-[200] bg-black flex flex-col items-center justify-center p-8 xl:hidden font-sora"
           >
             <button className="absolute top-10 right-10" onClick={() => setIsMenuOpen(false)}>
               <X className="w-8 h-8" />
@@ -197,6 +198,7 @@ export default function HomePage() {
           background-color: #0f1015;
           margin: 0;
         }
+        .h-18 { height: 4.5rem; } /* Define a altura h-18 manualmente no CSS */
       `}</style>
     </main>
   );

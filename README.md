@@ -1,71 +1,55 @@
-<a href="https://chat.vercel.ai/">
-  <img alt="Chatbot" src="app/(chat)/opengraph-image.png">
-  <h1 align="center">Chatbot</h1>
+<a href="https://portal-emrede-final.vercel.app/">
+  <img alt="Emrede Pro - Oráculo" src="app/(chat)/opengraph-image.png">
+  <h1 align="center">Emrede Pro: Oráculo</h1>
 </a>
 
 <p align="center">
-    Chatbot (formerly AI Chatbot) is a free, open-source template built with Next.js and the AI SDK that helps you quickly build powerful chatbot applications.
+    O Oráculo é a inteligência estratégica da Emrede Pro, desenvolvida para guiar artistas na Jornada da Transmutação através de análises SWOT, planejamento de carreira e inteligência de mercado musical.
 </p>
 
 <p align="center">
-  <a href="https://chatbot.dev"><strong>Read Docs</strong></a> ·
-  <a href="#features"><strong>Features</strong></a> ·
-  <a href="#model-providers"><strong>Model Providers</strong></a> ·
-  <a href="#deploy-your-own"><strong>Deploy Your Own</strong></a> ·
-  <a href="#running-locally"><strong>Running locally</strong></a>
+  <a href="#proposta"><strong>Proposta</strong></a> ·
+  <a href="#tecnologias"><strong>Tecnologias</strong></a> ·
+  <a href="#pilares"><strong>Pilares Estratégicos</strong></a> ·
+  <a href="#infraestrutura"><strong>Infraestrutura</strong></a>
 </p>
 <br/>
 
-## Features
+## 🔮 Proposta
 
-- [Next.js](https://nextjs.org) App Router
-  - Advanced routing for seamless navigation and performance
-  - React Server Components (RSCs) and Server Actions for server-side rendering and increased performance
-- [AI SDK](https://ai-sdk.dev/docs/introduction)
-  - Unified API for generating text, structured objects, and tool calls with LLMs
-  - Hooks for building dynamic chat and generative user interfaces
-  - Supports OpenAI, Anthropic, Google, xAI, and other model providers via AI Gateway
-- [shadcn/ui](https://ui.shadcn.com)
-  - Styling with [Tailwind CSS](https://tailwindcss.com)
-  - Component primitives from [Radix UI](https://radix-ui.com) for accessibility and flexibility
-- Data Persistence
-  - [Neon Serverless Postgres](https://vercel.com/marketplace/neon) for saving chat history and user data
-  - [Vercel Blob](https://vercel.com/storage/blob) for efficient file storage
-- [Auth.js](https://authjs.dev)
-  - Simple and secure authentication
+Diferente de chatbots genéricos, o Oráculo da Emrede Pro utiliza o motor **Gemini 1.5 Flash** calibrado para o mercado fonográfico. Ele atua como um consultor 24/7 para artistas independentes, ajudando na transmutação de talentos em negócios sustentáveis.
 
-## Model Providers
+## 🚀 Tecnologias
 
-This template uses the [Vercel AI Gateway](https://vercel.com/docs/ai-gateway) to access multiple AI models through a unified interface. Models are configured in `lib/ai/models.ts` with per-model provider routing. Included models: Mistral, Moonshot, DeepSeek, OpenAI, and xAI.
+- [Next.js 15+](https://nextjs.org) - Arquitetura de alta performance com App Router.
+- [Google Gemini AI](https://ai.google.dev/) - Inteligência generativa de última geração para análise de dados e criatividade.
+- [AI SDK](https://ai-sdk.dev/docs/introduction) - Fluxo de mensagens em tempo real (Streaming).
+- [shadcn/ui](https://ui.shadcn.com) - Interface moderna e minimalista com Tailwind CSS.
 
-### AI Gateway Authentication
+## 🛠 Pilares Estratégicos
 
-**For Vercel deployments**: Authentication is handled automatically via OIDC tokens.
+- **Matriz SWOT Musical**: Identificação profunda de Forças, Fraquezas, Oportunidades e Ameaças no cenário atual do artista.
+- **Jornada da Transmutação**: Guia passo a passo para evolução de maturidade artística.
+- **Análise de Frequências**: Integração do conceito de "Rock Xamânico" e frequências de cura (432Hz) na estratégia de conteúdo.
+- **Data Persistence**: Histórico de evolução salvo via **Neon Serverless Postgres**.
 
-**For non-Vercel deployments**: You need to provide an AI Gateway API key by setting the `AI_GATEWAY_API_KEY` environment variable in your `.env.local` file.
+## 🏗 Infraestrutura
 
-With the [AI SDK](https://ai-sdk.dev/docs/introduction), you can also switch to direct LLM providers like [OpenAI](https://openai.com), [Anthropic](https://anthropic.com), [Cohere](https://cohere.com/), and [many more](https://ai-sdk.dev/providers/ai-sdk-providers) with just a few lines of code.
+Este portal opera de forma independente, utilizando conexões diretas com os provedores para garantir máxima velocidade e privacidade dos dados dos artistas:
 
-## Deploy Your Own
+- **Database**: [Neon Postgres](https://neon.tech) (Histórico de chats e perfis).
+- **Cache & Stream**: [Upstash Redis](https://upstash.com) (Gerenciamento de contexto em tempo real).
+- **AI Engine**: Conexão direta via Google Generative AI (Sem intermediários).
 
-You can deploy your own version of Chatbot to Vercel with one click:
+## 🎸 Execução Local
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/templates/next.js/chatbot)
+Para rodar o laboratório da Emrede Pro localmente:
 
-## Running locally
-
-You will need to use the environment variables [defined in `.env.example`](.env.example) to run Chatbot. It's recommended you use [Vercel Environment Variables](https://vercel.com/docs/projects/environment-variables) for this, but a `.env` file is all that is necessary.
-
-> Note: You should not commit your `.env` file or it will expose secrets that will allow others to control access to your various AI and authentication provider accounts.
-
-1. Install Vercel CLI: `npm i -g vercel`
-2. Link local instance with Vercel and GitHub accounts (creates `.vercel` directory): `vercel link`
-3. Download your environment variables: `vercel env pull`
+1. Clone o repositório.
+2. Configure o `.env` com sua `GOOGLE_GENERATIVE_AI_API_KEY`.
+3. Instale as dependências:
 
 ```bash
 pnpm install
-pnpm db:migrate # Setup database or apply latest database changes
+pnpm db:migrate 
 pnpm dev
-```
-
-Your app template should now be running on [localhost:3000](http://localhost:3000).

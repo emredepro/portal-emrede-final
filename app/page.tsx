@@ -38,9 +38,9 @@ export default function HomePage() {
   ];
 
   const servicos = [
-    { id: "01", title: "Análise & Diagnóstico", desc: "Mapeamento estratégico de maturidade.", color: "#12f2f2", img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800" },
-    { id: "02", title: "Marketing & Produção", desc: "Otimização de lançamentos e presença digital.", color: "#ff3b86", img: "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&q=80&w=800" },
-    { id: "03", title: "Oportunidades & Conexões", desc: "Rede de fomento e parcerias estratégicas.", color: "#f3dfd4", img: "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&q=80&w=800" },
+    { id: "01", color: "#12f2f2", img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800" },
+    { id: "02", color: "#ff3b86", img: "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&q=80&w=800" },
+    { id: "03", color: "#f3dfd4", img: "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&q=80&w=800" },
   ];
 
   if (!mounted) return <div className="min-h-screen bg-[#0f1015]" />;
@@ -48,20 +48,20 @@ export default function HomePage() {
   return (
     <main className="min-h-screen bg-[#0f1015] text-white flex flex-col items-center relative overflow-x-hidden font-sora select-none">
       
-      {/* MENU LIMPO - SEM BLUR / SEM BOTÃO ACESSAR */}
+      {/* MENU - LOGO H-08 / SEM ITÁLICO */}
       <motion.header 
         style={{ opacity: headerOpacity, y: headerY }}
         className="fixed top-6 z-[100] w-full max-w-6xl px-4 pointer-events-auto"
       >
-        <nav className="bg-zinc-900 border border-zinc-800 rounded-full px-10 py-3 flex items-center justify-between shadow-2xl">
+        <nav className="bg-zinc-900 border border-zinc-800 rounded-full px-8 py-3 flex items-center justify-between shadow-2xl">
           <Link href="/" className="flex items-center">
-            <Image src="/Prancheta 6.png" alt="Emrede Pro" width={160} height={52} className="h-13 w-auto object-contain" priority />
+            <Image src="/Prancheta 6.png" alt="Emrede Pro" width={120} height={32} className="h-8 w-auto object-contain" priority />
           </Link>
           
           <ul className="hidden xl:flex gap-1 text-[10px] uppercase tracking-widest font-bold text-zinc-400">
             {navItems.map((item) => (
               <li key={item.name}>
-                <Link href={item.href} className="px-4 py-2 rounded-full border border-transparent hover:border-zinc-700/50 hover:bg-zinc-800/30 hover:text-white transition-all duration-300 block italic">
+                <Link href={item.href} className="px-4 py-2 rounded-full border border-transparent hover:border-zinc-700/50 hover:bg-zinc-800/30 hover:text-white transition-all duration-300 block">
                   {item.name}
                 </Link>
               </li>
@@ -74,7 +74,7 @@ export default function HomePage() {
         </nav>
       </motion.header>
 
-      {/* HERO SECTION */}
+      {/* HERO SECTION - TÍTULO VOLTOU AO NORMAL */}
       <section id="home" className="min-h-screen flex flex-col items-center justify-center text-center relative w-full max-w-5xl px-6">
         <motion.div 
           animate={{ backgroundColor: isAdvanced ? colors.vinho : colors.azulNeon, opacity: 0.20 }}
@@ -82,7 +82,7 @@ export default function HomePage() {
         />
 
         <div className="relative z-10 flex flex-col items-center">
-          <h1 className="text-6xl md:text-9xl font-extrabold tracking-tighter mb-8 leading-[0.85]">
+          <h1 className="text-6xl md:text-8xl font-extrabold tracking-tighter mb-8 leading-tight">
             EMREDE <span style={{ color: isAdvanced ? colors.vinho : colors.azulNeon }} className="transition-colors duration-700">PRO</span>
           </h1>
           
@@ -98,11 +98,11 @@ export default function HomePage() {
           </motion.div>
         </div>
 
-        {/* SWITCH MATURIDADE ABAIXO */}
+        {/* SWITCH MATURIDADE - SEM ITÁLICO */}
         <div className="mt-24 flex flex-col items-center gap-8 relative z-10">
           <div onClick={() => setIsAdvanced(!isAdvanced)} className="w-80 h-20 bg-zinc-900 border border-zinc-800 rounded-full p-2 cursor-pointer relative flex items-center">
             <motion.div animate={{ x: isAdvanced ? 156 : 0 }} style={{ backgroundColor: isAdvanced ? colors.vinho : colors.azulNeon }} className="absolute w-[150px] h-16 rounded-full shadow-lg" />
-            <div className="flex justify-around w-full z-10 font-bold text-[10px] uppercase tracking-widest italic">
+            <div className="flex justify-around w-full z-10 font-bold text-[10px] uppercase tracking-widest">
               <span className={!isAdvanced ? "text-black" : "text-zinc-500"}>Underground</span>
               <span className={isAdvanced ? "text-white" : "text-zinc-600"}>Estruturado</span>
             </div>
@@ -110,34 +110,31 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* SEÇÃO SERVIÇOS - GRID / LIST */}
-      <section id="servicos" className="py-32 w-full max-w-7xl mx-auto px-6 relative z-10">
-        <div className="flex flex-col md:flex-row items-baseline justify-between mb-20 gap-8">
-          <h2 className="text-5xl md:text-7xl font-extrabold tracking-tighter uppercase italic">O que <span className="text-zinc-800">entregamos</span></h2>
-          
-          <div className="flex items-center gap-1 bg-zinc-900 border border-zinc-800 rounded-full p-1.5">
-            <button onClick={() => setViewMode('list')} className={`px-5 py-2.5 rounded-full flex gap-2 items-center text-[10px] uppercase tracking-widest font-bold transition-all ${viewMode === 'list' ? 'bg-zinc-800 text-white' : 'text-zinc-500 hover:text-zinc-100'}`}><List size={14}/> List</button>
-            <button onClick={() => setViewMode('grid')} className={`px-5 py-2.5 rounded-full flex gap-2 items-center text-[10px] uppercase tracking-widest font-bold transition-all ${viewMode === 'grid' ? 'bg-white text-black' : 'text-zinc-500 hover:text-zinc-100'}`}><Grid3X3 size={14}/> Grid</button>
-          </div>
+      {/* SEÇÃO SERVIÇOS - BLOCOS CENTRALIZADOS OU LADO A LADO */}
+      <section id="servicos" className="py-32 w-full max-w-7xl mx-auto px-6 relative z-10 flex flex-col items-center">
+        
+        {/* Switch de View centralizado */}
+        <div className="flex items-center gap-1 bg-zinc-900 border border-zinc-800 rounded-full p-1.5 mb-20">
+          <button onClick={() => setViewMode('list')} className={`px-5 py-2.5 rounded-full flex gap-2 items-center text-[10px] uppercase tracking-widest font-bold transition-all ${viewMode === 'list' ? 'bg-zinc-800 text-white' : 'text-zinc-500 hover:text-zinc-100'}`}><List size={14}/> List</button>
+          <button onClick={() => setViewMode('grid')} className={`px-5 py-2.5 rounded-full flex gap-2 items-center text-[10px] uppercase tracking-widest font-bold transition-all ${viewMode === 'grid' ? 'bg-white text-black' : 'text-zinc-500 hover:text-zinc-100'}`}><Grid3X3 size={14}/> Grid</button>
         </div>
 
-        <div className={`grid gap-6 transition-all duration-500 ${viewMode === 'grid' ? 'grid-cols-1 md:grid-cols-3' : 'grid-cols-1'}`}>
+        {/* Grid Flexível: Lado a lado no Grid, Coluna centralizada na List */}
+        <div className={`flex flex-wrap justify-center gap-8 w-full transition-all duration-500 ${viewMode === 'list' ? 'flex-col items-center' : 'flex-row'}`}>
           {servicos.map((s) => (
-            <motion.div layout key={s.id} className={`bg-zinc-900/40 border border-zinc-800/50 rounded-[40px] overflow-hidden relative group transition-all ${viewMode === 'list' ? 'flex flex-row items-center p-8' : 'aspect-[4/5] p-10 flex flex-col justify-end'}`}>
-              
-              {/* Imagem de Fundo (Grid) ou Lateral (List) */}
-              <div className={`${viewMode === 'grid' ? 'absolute inset-0 z-0' : 'w-48 h-32 rounded-2xl overflow-hidden relative ml-auto order-last border border-zinc-800'}`}>
-                <Image src={s.img} alt={s.title} fill className={`object-cover ${viewMode === 'grid' ? 'opacity-20 group-hover:opacity-40 transition-opacity duration-700' : 'opacity-100'}`} />
+            <motion.div 
+              layout 
+              key={s.id} 
+              className="bg-zinc-900/40 border border-zinc-800/50 rounded-[32px] overflow-hidden relative group transition-all w-full max-w-[380px] aspect-[4/5] p-10 flex flex-col justify-end shadow-xl hover:border-zinc-700"
+            >
+              {/* Imagem de Fundo (Conteúdo do Bloco) */}
+              <div className="absolute inset-0 z-0">
+                <Image src={s.img} alt={`Serviço ${s.id}`} fill className="object-cover opacity-40 group-hover:opacity-60 transition-opacity duration-700" />
               </div>
 
               {/* Número Sutil Superior Esquerdo */}
-              <div style={{ color: s.color }} className="absolute top-10 left-10 font-mono text-[10px] tracking-[0.5em] font-bold opacity-60 z-10">
+              <div style={{ color: s.color }} className="absolute top-8 left-8 font-mono text-[10px] tracking-[0.5em] font-bold opacity-80 z-10">
                 {s.id} /
-              </div>
-
-              <div className="relative z-10 max-w-xs">
-                <h3 className="text-3xl font-bold tracking-tight mb-3 uppercase leading-none">{s.title}</h3>
-                <p className="text-zinc-500 text-sm font-light leading-relaxed">{s.desc}</p>
               </div>
             </motion.div>
           ))}
@@ -152,7 +149,6 @@ export default function HomePage() {
         @import url('https://fonts.googleapis.com/css2?family=Sora:wght@100;300;400;600;800&display=swap');
         html { scroll-behavior: smooth; }
         body { font-family: 'Sora', sans-serif; background: #0f1015; color: white; -webkit-font-smoothing: antialiased; }
-        .h-13 { height: 3.25rem; }
       `}</style>
     </main>
   );

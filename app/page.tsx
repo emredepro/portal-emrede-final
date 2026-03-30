@@ -13,7 +13,6 @@ export default function HomePage() {
     setYear(new Date().getFullYear());
   }, []);
 
-  // Cores extraídas diretamente do seu GUIA-DE-MARCA
   const colors = {
     bg: "#0f1015",
     azulNeon: "#12f2f2",
@@ -23,25 +22,22 @@ export default function HomePage() {
 
   return (
     <main className="min-h-screen bg-[#0f1015] text-white flex flex-col items-center justify-center px-6 relative overflow-hidden">
-      {/* Efeito de Ruído/Grain sutil no fundo */}
-      <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
-
-      {/* Glow de Fundo dinâmico */}
+      {/* Glow de Fundo Estático (Substitui o Math.random) */}
       <motion.div 
         animate={{ 
           backgroundColor: isAdvanced ? colors.vinho : colors.azulNeon,
-          opacity: isAdvanced ? 0.15 : 0.2 
+          opacity: isAdvanced ? 0.12 : 0.18 
         }}
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-[120px] transition-colors duration-1000"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-[130px] transition-colors duration-1000 pointer-events-none"
       />
 
       <div className="relative z-10 max-w-4xl w-full text-center">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, ease: "easeOut" }}
+          transition={{ duration: 0.8 }}
         >
-          <h1 className="text-5xl md:text-8xl font-extrabold tracking-tighter mb-6 select-none">
+          <h1 className="text-6xl md:text-8xl font-extrabold tracking-tighter mb-6 select-none font-sora">
             EMREDE <span 
               style={{ color: isAdvanced ? colors.vinho : colors.azulNeon }} 
               className="transition-colors duration-700"
@@ -50,18 +46,17 @@ export default function HomePage() {
             </span>
           </h1>
           
-          <p className="text-zinc-400 text-lg md:text-xl max-w-2xl mx-auto mb-16 font-light leading-relaxed">
+          <p className="text-zinc-400 text-lg md:text-xl max-w-2xl mx-auto mb-16 font-light leading-relaxed font-sora">
             Inteligência tecnológica para <span className="text-white font-medium">transmutar</span> carreiras musicais através de dados e estratégia de elite.
           </p>
         </motion.div>
 
-        {/* O TOGGLE DE MATURIDADE */}
+        {/* TOGGLE DE MATURIDADE */}
         <div className="flex flex-col items-center gap-10 mb-20">
           <div 
             onClick={() => setIsAdvanced(!isAdvanced)}
             className="w-80 h-20 bg-zinc-900/40 border border-zinc-800/50 rounded-full p-2 cursor-pointer relative flex items-center backdrop-blur-md"
           >
-            {/* O Botão Deslizante */}
             <motion.div 
               animate={{ x: isAdvanced ? 156 : 0 }}
               transition={{ type: "spring", stiffness: 250, damping: 25 }}
@@ -69,13 +64,12 @@ export default function HomePage() {
               className="absolute w-[150px] h-16 rounded-full shadow-lg"
             />
             
-            <div className="flex justify-around w-full z-10 font-bold text-[10px] uppercase tracking-[0.2em] transition-colors duration-500 select-none">
+            <div className="flex justify-around w-full z-10 font-bold text-[10px] uppercase tracking-[0.2em] transition-colors duration-500 select-none font-sora">
               <span className={!isAdvanced ? "text-black" : "text-zinc-500"}>Underground</span>
               <span className={isAdvanced ? "text-white" : "text-zinc-600"}>Estruturado</span>
             </div>
           </div>
 
-          {/* Feedback de Texto dinâmico */}
           <div className="h-8">
             <AnimatePresence mode="wait">
               <motion.p
@@ -83,7 +77,7 @@ export default function HomePage() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
-                className="text-zinc-500 italic text-sm md:text-base font-light"
+                className="text-zinc-500 italic text-sm md:text-base font-light font-sora"
               >
                 {isAdvanced 
                   ? "“Tenho estrutura e busco alcançar voos maiores.”" 
@@ -93,14 +87,10 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Call to Action */}
-        <motion.div 
-          whileHover={{ scale: 1.02 }} 
-          whileTap={{ scale: 0.98 }}
-        >
+        <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
           <Link 
             href="/login" 
-            className="group relative inline-flex items-center gap-4 bg-white text-black px-14 py-6 rounded-full font-bold text-xl transition-all hover:bg-[#f3dfd4]"
+            className="group relative inline-flex items-center gap-4 bg-white text-black px-14 py-6 rounded-full font-bold text-xl transition-all hover:bg-[#f3dfd4] font-sora"
           >
             Iniciar Análise SWOT
             <ArrowRight className="w-6 h-6 transition-transform group-hover:translate-x-1" />
@@ -108,12 +98,10 @@ export default function HomePage() {
         </motion.div>
       </div>
 
-      {/* Footer Branding */}
-      <footer className="mt-32 text-zinc-800 text-[10px] tracking-[0.5em] uppercase font-bold">
-        © {year} EMREDE PRO / Transmutação Constante
+      <footer className="mt-32 text-zinc-800 text-[10px] tracking-[0.5em] uppercase font-bold font-sora">
+        © {year || ''} EMREDE PRO / Transmutação Constante
       </footer>
 
-      {/* Importação da Sora via CSS */}
       <style jsx global>{`
         @import url('https://fonts.googleapis.com/css2?family=Sora:wght@100;300;400;600;800&display=swap');
         body { 

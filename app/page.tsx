@@ -48,29 +48,35 @@ export default function HomePage() {
       >
         <nav className="bg-zinc-900/60 backdrop-blur-xl border border-zinc-800/50 rounded-full px-8 py-3 flex items-center justify-between shadow-2xl">
           
-          {/* LOGO EMREDE PRO */}
+          {/* LOGO EMREDE PRO - ATUALIZADA PARA H-13 */}
           <Link href="/" className="flex items-center">
             <Image 
               src="/Prancheta 6.png" 
               alt="Logo Emrede Pro"
-              width={160} 
-              height={50}
-              className="h-10 w-auto object-contain transition-all"
+              width={180} 
+              height={52}
+              className="h-13 w-auto object-contain transition-all"
               priority 
             />
           </Link>
           
-          <ul className="hidden md:flex gap-6 text-[10px] uppercase tracking-widest font-bold text-zinc-400">
+          {/* Desktop Menu com Efeito de Caixa no Hover */}
+          <ul className="hidden md:flex gap-2 text-[10px] uppercase tracking-widest font-bold text-zinc-400">
             {navItems.map((item) => (
               <li key={item.name}>
-                <Link href={item.href} className="hover:text-white transition-colors">{item.name}</Link>
+                <Link 
+                  href={item.href} 
+                  className="px-4 py-2 rounded-full border border-transparent hover:border-zinc-700 hover:bg-white/5 hover:text-white transition-all duration-300 block"
+                >
+                  {item.name}
+                </Link>
               </li>
             ))}
           </ul>
 
           <Link 
             href="/login" 
-            className="hidden md:block text-[10px] uppercase font-bold bg-white text-black px-5 py-2.5 rounded-full hover:bg-zinc-200 transition-all"
+            className="hidden md:block text-[10px] uppercase font-bold border border-white text-white px-6 py-2.5 rounded-full hover:bg-white hover:text-black transition-all duration-500"
           >
             Acessar
           </Link>

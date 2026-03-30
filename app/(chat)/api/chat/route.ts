@@ -180,7 +180,6 @@ export async function POST(request: Request) {
       });
     }
 
-    const modelConfig = chatModels.find((m) => m.id === chatModel);
     const modelCapabilities = await getCapabilities();
     const capabilities = modelCapabilities[chatModel];
     const isReasoningModel = capabilities?.reasoning === true;
@@ -206,14 +205,6 @@ export async function POST(request: Request) {
                   "updateDocument",
                   "requestSuggestions",
                 ],
-          providerOptions: {
-            ...(modelConfig?.gatewayOrder && {
-              gateway: { order: modelConfig.gatewayOrder },
-            }),
-            ...(modelConfig?.reasoningEffort && {
-              openai: { reasoningEffort: modelConfig.reasoningEffort },
-            }),
-          },
           tools: {
             getWeather,
             createDocument: createDocument({
@@ -288,14 +279,7 @@ export async function POST(request: Request) {
         }
       },
       onError: (error) => {
-        if (
-          error instanceof Error &&
-          error.message?.includes(
-            "AI Gateway requires a valid credit card on file to service requests"
-          )
-        ) {
-          return "AI Gateway requires a valid credit card on file to service requests. Please visit https://vercel.com/d?to=%2F%5Bteam%5D%2F%7E%2Fai%3Fmodal%3Dadd-credit-card to add a card and unlock your free credits.";
-        }
+        console.error("Stream error:", error);
         return "Oops, an error occurred!";
       },
     });
@@ -326,15 +310,6 @@ export async function POST(request: Request) {
 
     if (error instanceof ChatbotError) {
       return error.toResponse();
-    }
-
-    if (
-      error instanceof Error &&
-      error.message?.includes(
-        "AI Gateway requires a valid credit card on file to service requests"
-      )
-    ) {
-      return new ChatbotError("bad_request:activate_gateway").toResponse();
     }
 
     console.error("Unhandled error in chat API:", error, { vercelId });

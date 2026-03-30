@@ -24,7 +24,7 @@ export default function HomePage() {
   const colors = {
     bg: "#0f1015",
     azulNeon: "#12f2f2",
-    vinho: "#8e1e44", // Vinho oficial do guia
+    vinho: "#8e1e44",
   };
 
   const navItems = [
@@ -32,6 +32,7 @@ export default function HomePage() {
     { name: "Sobre", href: "#" },
     { name: "Consultoria & Mentoria", href: "#" },
     { name: "Serviços & Combos", href: "#" },
+    { name: "Hub", href: "#" }, // Novo item incluído
     { name: "Contato", href: "#" },
   ];
 
@@ -40,12 +41,12 @@ export default function HomePage() {
   return (
     <main className="min-h-[200vh] bg-[#0f1015] text-white flex flex-col items-center px-6 relative overflow-hidden font-sora">
       
-      {/* MENU INTELIGENTE (Surge no Scroll) */}
+      {/* MENU INTELIGENTE */}
       <motion.header 
         style={{ opacity: headerOpacity, y: headerY }}
-        className="fixed top-6 z-[100] w-full max-w-4xl px-4 pointer-events-auto"
+        className="fixed top-6 z-[100] w-full max-w-5xl px-4 pointer-events-auto"
       >
-        <nav className="bg-zinc-900/60 backdrop-blur-xl border border-zinc-800/50 rounded-full px-6 py-3 flex items-center justify-between shadow-2xl">
+        <nav className="bg-zinc-900/60 backdrop-blur-xl border border-zinc-800/50 rounded-full px-8 py-3 flex items-center justify-between shadow-2xl">
           <div className="text-sm font-bold tracking-tighter">
             EMREDE <span style={{ color: isAdvanced ? colors.vinho : colors.azulNeon }}>PRO</span>
           </div>
@@ -61,7 +62,7 @@ export default function HomePage() {
 
           <Link 
             href="/login" 
-            className="hidden md:block text-[10px] uppercase font-bold bg-white text-black px-4 py-2 rounded-full hover:bg-zinc-200 transition-all"
+            className="hidden md:block text-[10px] uppercase font-bold bg-white text-black px-5 py-2.5 rounded-full hover:bg-zinc-200 transition-all"
           >
             Acessar
           </Link>
@@ -75,11 +76,11 @@ export default function HomePage() {
 
       {/* HERO SECTION */}
       <section className="min-h-screen flex flex-col items-center justify-center text-center relative w-full max-w-4xl">
-        {/* Glow de Fundo dinâmico (OPACIDADE AUMENTADA PARA 20%) */}
+        {/* Glow de Fundo 20% */}
         <motion.div 
           animate={{ 
             backgroundColor: isAdvanced ? colors.vinho : colors.azulNeon,
-            opacity: 0.20 // Aumentado de 0.15 para 0.20
+            opacity: 0.20 
           }}
           transition={{ duration: 1 }}
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-[140px] pointer-events-none"
@@ -156,7 +157,7 @@ export default function HomePage() {
         © {year} EMREDE PRO / Transmutação Constante
       </footer>
 
-      {/* MOBILE MENU OVERLAY */}
+      {/* MOBILE MENU */}
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div 

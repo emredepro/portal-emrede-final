@@ -46,25 +46,30 @@ export default function HomePage() {
   if (!mounted) return <div className="min-h-screen bg-[#0f1015]" />;
 
   return (
-    <main className="min-h-screen bg-[#0f1015] text-white flex flex-col items-center relative overflow-x-hidden font-sora select-none">
+    <main className="min-h-screen bg-[#0f1015] text-white flex flex-col items-center relative overflow-x-hidden font-sora select-none selection:bg-zinc-700">
       
-      {/* MENU - BORDA FIXA + FIBRA ÓTICA */}
+      {/* MENU - BORDA FIXA + FIBRA ÓTICA AZUL NEON */}
       <motion.header 
         style={{ opacity: headerOpacity, y: headerY }}
         className="fixed top-6 z-[100] w-full max-w-5xl px-4 pointer-events-auto"
       >
-        <nav className="relative bg-zinc-950 border border-zinc-800 rounded-full px-8 py-3 flex items-center justify-between shadow-2xl overflow-hidden">
-          {/* FIBRA ÓTICA DO MENU */}
-          <div className="absolute inset-0 rounded-full pointer-events-none varko-beam-overlay"></div>
+        <nav className="relative bg-zinc-950 border border-zinc-800 rounded-full px-8 py-3 flex items-center justify-between shadow-2xl overflow-hidden group">
+          
+          {/* A FIBRA ÓTICA (LINHA DE LUZ AZUL NEON) */}
+          <div className="absolute inset-0 rounded-full pointer-events-none varko-beam-overlay animation-beam-azul opacity-50 group-hover:opacity-100 transition-opacity"></div>
           
           <Link href="/" className="flex items-center relative z-10">
             <Image src="/Prancheta 6.png" alt="Emrede Pro" width={90} height={24} className="h-6 w-auto object-contain" priority />
           </Link>
           
+          {/* Desktop Menu - Borda sutil SEM FUNDO no Hover */}
           <ul className="hidden xl:flex gap-1 text-[10px] uppercase tracking-widest font-bold text-zinc-500 relative z-10">
             {navItems.map((item) => (
               <li key={item.name}>
-                <Link href={item.href} className="px-4 py-2 rounded-full hover:text-white transition-all duration-300 block">
+                <Link 
+                  href={item.href} 
+                  className="px-4 py-2 rounded-full border border-transparent hover:border-zinc-700 hover:text-white transition-all duration-300 block"
+                >
                   {item.name}
                 </Link>
               </li>
@@ -105,14 +110,16 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* BOTÃO SWOT COM EFEITO VARKO CORRIGIDO */}
+        {/* BOTÃO SWOT - AGORA COM FIBRA ÓTICA AZUL E BORDA SUTIL */}
         <motion.div 
           whileHover={{ scale: 1.02 }} 
           whileTap={{ scale: 0.98 }} 
-          className="relative z-10 group"
+          className="relative z-10 rounded-full p-[1px] overflow-hidden group shadow-xl"
         >
-          <div className="absolute inset-0 rounded-full varko-beam-overlay opacity-60"></div>
-          <Link href="/login" className="relative flex items-center gap-3 bg-white text-black px-10 py-4 rounded-full font-bold text-xl transition-all shadow-xl">
+          {/* FIBRA ÓTICA DO BOTÃO (AZUL NEON) */}
+          <div className="absolute inset-0 rounded-full pointer-events-none varko-beam-overlay animation-beam-azul opacity-60 group-hover:opacity-100 transition-opacity"></div>
+          
+          <Link href="/login" className="relative flex items-center gap-3 bg-white text-black px-10 py-4 rounded-full font-bold text-xl border border-zinc-200/50 transition-all">
             Iniciar Análise SWOT
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </Link>
@@ -138,26 +145,54 @@ export default function HomePage() {
         </div>
       </section>
 
-      <footer className="py-20 text-zinc-900 text-[10px] tracking-[0.6em] uppercase font-black text-center w-full mt-auto">© {year} EMREDE PRO</footer>
+      <footer className="py-20 text-zinc-900 text-[10px] tracking-[0.6em] uppercase font-black text-center w-full mt-auto relative z-10">© {year} EMREDE PRO / TRANSMUTAÇÃO CONSTANTE</footer>
+
+      {/* MOBILE MENU */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div 
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[200] bg-black flex flex-col items-center justify-center p-8 xl:hidden font-sora"
+          >
+            <button className="absolute top-10 right-10" onClick={() => setIsMenuOpen(false)}>
+              <X className="w-8 h-8 text-zinc-400" />
+            </button>
+            <ul className="flex flex-col gap-8 text-2xl font-bold text-center text-zinc-200">
+              {navItems.map((item) => (
+                <li key={item.name} onClick={() => setIsMenuOpen(false)}>
+                  <Link href={item.href}>{item.name}</Link>
+                </li>
+              ))}
+            </ul>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <style jsx global>{`
         @import url('https://fonts.googleapis.com/css2?family=Sora:wght@100;300;400;600;800&display=swap');
         html { scroll-behavior: smooth; }
         body { font-family: 'Sora', sans-serif; background: #0f1015; color: white; -webkit-font-smoothing: antialiased; margin: 0; }
 
-        /* A FIBRA ÓTICA DEFINITIVA */
+        /* A FIBRA ÓTICA (BEAM EFFECT) */
         .varko-beam-overlay {
           position: absolute;
           inset: 0;
           border-radius: 9999px;
           padding: 1.5px; /* Espessura da fibra */
-          background: conic-gradient(from var(--border-angle), transparent 20%, #fff 50%, transparent 80%);
+          background: linear-gradient(transparent, transparent) padding-box,
+                      conic-gradient(from var(--border-angle), transparent 20%, var(--beam-color) 50%, transparent 80%) border-box;
           -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
           mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
           -webkit-mask-composite: xor;
           mask-composite: exclude;
           pointer-events: none;
+          z-index: 5;
           animation: border-angle 4s linear infinite;
+        }
+
+        /* ANIMAÇÃO AZUL NEON */
+        .animation-beam-azul {
+          --beam-color: #12f2f2; /* Azul Neon Oficial */
         }
 
         @property --border-angle {

@@ -48,14 +48,14 @@ export default function HomePage() {
   return (
     <main className="min-h-screen bg-[#0f1015] text-white flex flex-col items-center relative overflow-x-hidden font-sora select-none">
       
-      {/* MENU - EFEITO FIBRA ÓTICA */}
+      {/* MENU - COM BORDA + FIBRA ÓTICA */}
       <motion.header 
         style={{ opacity: headerOpacity, y: headerY }}
         className="fixed top-6 z-[100] w-full max-w-5xl px-4 pointer-events-auto"
       >
-        <nav className="relative bg-zinc-950 border border-white/10 rounded-full px-8 py-3 flex items-center justify-between shadow-2xl overflow-hidden">
-          {/* A FIBRA ÓTICA (LINHA DE LUZ) */}
-          <div className="absolute inset-0 rounded-full pointer-events-none animation-border-beam"></div>
+        <nav className="relative bg-zinc-950 border border-zinc-800 rounded-full px-8 py-3 flex items-center justify-between shadow-2xl overflow-hidden group">
+          {/* EFEITO FIBRA ÓTICA (BEAM) */}
+          <div className="absolute inset-0 rounded-full pointer-events-none animation-border-beam opacity-40"></div>
           
           <Link href="/" className="flex items-center relative z-10">
             <Image src="/Prancheta 6.png" alt="Emrede Pro" width={90} height={24} className="h-6 w-auto object-contain" priority />
@@ -80,16 +80,16 @@ export default function HomePage() {
       {/* HERO SECTION */}
       <section id="home" className="min-h-screen flex flex-col items-center justify-center text-center relative w-full max-w-5xl px-6 pt-20">
         <motion.div 
-          animate={{ backgroundColor: isAdvanced ? colors.vinho : colors.azulNeon, opacity: 0.15 }}
+          animate={{ backgroundColor: isAdvanced ? colors.vinho : colors.azulNeon, opacity: 0.20 }}
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-[140px] pointer-events-none"
         />
 
         <div className="relative z-10 flex flex-col items-center mb-16">
-          <h1 className="text-5xl md:text-6xl font-extrabold tracking-tighter mb-6 leading-tight select-none">
+          <h1 className="text-5xl md:text-6xl font-extrabold tracking-tighter mb-6 leading-tight">
             EMREDE <span style={{ color: isAdvanced ? colors.vinho : colors.azulNeon }} className="transition-colors duration-700">PRO</span>
           </h1>
           
-          <p className="text-zinc-500 text-lg md:text-xl max-w-xl mb-12 font-light select-none">
+          <p className="text-zinc-500 text-lg md:text-xl max-w-xl mb-12 font-light">
             Tecnologia para <span className="text-white">transmutar</span> carreiras musicais através de dados e estratégia.
           </p>
         </div>
@@ -105,19 +105,21 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* BOTÃO SWOT COM FIBRA ÓTICA */}
+        {/* BOTÃO SWOT - AGORA COM FIBRA ÓTICA E BORDA SUTIL */}
         <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="relative z-10 rounded-full p-[1px] overflow-hidden group">
-          <div className="absolute inset-0 rounded-full pointer-events-none animation-border-beam opacity-70"></div>
-          <Link href="/login" className="relative flex items-center gap-3 bg-white text-black px-12 py-5 rounded-full font-bold text-xl transition-all">
+          {/* FIBRA ÓTICA DO BOTÃO */}
+          <div className="absolute inset-0 rounded-full pointer-events-none animation-border-beam opacity-60"></div>
+          
+          <Link href="/login" className="relative flex items-center gap-3 bg-white text-black px-10 py-4 rounded-full font-bold text-xl border border-zinc-200 shadow-xl transition-all">
             Iniciar Análise SWOT
-            <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
+            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </Link>
         </motion.div>
       </section>
 
       {/* SEÇÃO SERVIÇOS */}
       <section id="servicos" className="py-32 w-full max-w-7xl mx-auto px-6 relative z-10 flex flex-col items-center">
-        <div className="flex items-center gap-1 bg-zinc-900 border border-zinc-800 rounded-full p-1 mb-24 scale-90">
+        <div className="flex items-center gap-1 bg-zinc-900 border border-zinc-800 rounded-full p-1 mb-20 scale-90">
           <button onClick={() => setViewMode('list')} className={`px-4 py-2 rounded-full flex gap-2 items-center text-[9px] uppercase tracking-widest font-bold transition-all ${viewMode === 'list' ? 'bg-zinc-800 text-white' : 'text-zinc-500 hover:text-zinc-100'}`}><List size={12}/> List</button>
           <button onClick={() => setViewMode('grid')} className={`px-4 py-2 rounded-full flex gap-2 items-center text-[9px] uppercase tracking-widest font-bold transition-all ${viewMode === 'grid' ? 'bg-white text-black' : 'text-zinc-500 hover:text-zinc-100'}`}><Grid3X3 size={12}/> Grid</button>
         </div>
@@ -141,14 +143,14 @@ export default function HomePage() {
         html { scroll-behavior: smooth; }
         body { font-family: 'Sora', sans-serif; background: #0f1015; color: white; -webkit-font-smoothing: antialiased; margin: 0; }
 
-        /* O SEGREDO DA FIBRA ÓTICA (BEAM) */
         .animation-border-beam {
           position: absolute;
           inset: 0;
           border: 2px solid transparent;
           border-radius: 9999px;
-          background: linear-gradient(#0f1015, #0f1015) padding-box,
-                      conic-gradient(from var(--border-angle), transparent 20%, #fff, transparent 80%) border-box;
+          /* O segredo: padding-box mantém o fundo, border-box anima a borda */
+          background: linear-gradient(transparent, transparent) padding-box,
+                      conic-gradient(from var(--border-angle), transparent 20%, #fff 50%, transparent 80%) border-box;
           animation: border-angle 4s linear infinite;
         }
 

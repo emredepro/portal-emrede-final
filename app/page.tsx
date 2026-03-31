@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { ArrowRight, List, Grid3X3, Menu } from "lucide-react";
 
 export default function HomePage() {
@@ -28,7 +28,7 @@ export default function HomePage() {
   return (
     <main className="bg-[#0f1015] text-white flex flex-col items-center relative font-sora select-none overflow-x-hidden">
       
-      {/* MENU - FIBRA ÓTICA E CONTORNO RESTAURADOS */}
+      {/* MENU - FIBRA ÓTICA E HOVER RESTAURADOS */}
       <motion.header 
         style={{ opacity: headerOpacity, y: headerY }}
         className="fixed top-6 z-[100] w-full max-w-5xl px-4 pointer-events-auto"
@@ -48,7 +48,7 @@ export default function HomePage() {
         </nav>
       </motion.header>
 
-      {/* 1. HERO - SEM ITÁLICO */}
+      {/* 1. HERO - SEM ITÁLICO NO EMREDE PRO */}
       <section id="home" className="min-h-screen flex flex-col items-center justify-center text-center relative w-full max-w-5xl px-6">
         <motion.div animate={{ backgroundColor: isAdvanced ? "#8e1e44" : "#12f2f2", opacity: 0.15 }} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-[140px] pointer-events-none" />
         <h1 className="text-5xl md:text-6xl font-extrabold tracking-tighter mb-6 leading-tight">
@@ -69,10 +69,10 @@ export default function HomePage() {
         </motion.div>
       </section>
 
-      {/* 2. SEÇÃO SOBRE - SCROLL TRIGGER REFINADO */}
+      {/* 2. SEÇÃO SOBRE - SCROLL TRIGGER (FADE SEQUENCIADO) */}
       <SobreSection />
 
-      {/* 3. SEÇÃO SERVIÇOS - CAIXAS E FIBRA ÓTICA RESTAURADOS */}
+      {/* 3. SEÇÃO SERVIÇOS - RETÂNGULOS COM FIBRA ÓTICA */}
       <section id="servicos" className="py-32 w-full max-w-7xl mx-auto px-6 relative z-10 flex flex-col items-center">
         <div className="flex items-center gap-1 bg-zinc-900 border border-zinc-800 rounded-full p-1 mb-20 scale-90">
           <button onClick={() => setViewMode('list')} className={`px-4 py-2 rounded-full flex gap-2 items-center text-[9px] uppercase tracking-widest font-bold transition-all ${viewMode === 'list' ? 'bg-zinc-800 text-white' : 'text-zinc-500'}`}><List size={12}/> List</button>
@@ -113,31 +113,34 @@ export default function HomePage() {
 
 function SobreSection() {
   const containerRef = useRef(null);
-  const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start end", "end start"] });
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"]
+  });
 
-  // Sequenciamento de Scroll: 
-  // Texto 1 (28px) aparece de 0.1 a 0.3 e some de 0.4 a 0.5
-  const opacity1 = useTransform(scrollYProgress, [0.1, 0.25, 0.4, 0.5], [0, 1, 1, 0]);
-  const y1 = useTransform(scrollYProgress, [0.1, 0.25], [100, 0]);
+  // Ajuste fino dos gatilhos: 
+  // Texto 1 (28px): Aparece de 0 a 0.2, fica até 0.4, some em 0.5
+  const opacity1 = useTransform(scrollYProgress, [0, 0.2, 0.4, 0.5], [0, 1, 1, 0]);
+  const y1 = useTransform(scrollYProgress, [0, 0.2], [50, 0]);
 
-  // Texto 2 (22px) aparece de 0.55 a 0.75 e some de 0.85 a 0.95
-  const opacity2 = useTransform(scrollYProgress, [0.55, 0.7, 0.85, 0.95], [0, 1, 1, 0]);
-  const y2 = useTransform(scrollYProgress, [0.55, 0.7], [100, 0]);
+  // Texto 2 (22px): Começa a nascer em 0.55, fica até 0.8, some em 1.0
+  const opacity2 = useTransform(scrollYProgress, [0.55, 0.7, 0.85, 1], [0, 1, 1, 0]);
+  const y2 = useTransform(scrollYProgress, [0.55, 0.7], [50, 0]);
 
   return (
-    <section ref={containerRef} id="sobre" className="h-[300vh] relative w-full">
+    <section ref={containerRef} id="sobre" className="h-[400vh] relative w-full">
       <div className="sticky top-0 h-screen w-full flex flex-col items-center justify-center px-6 overflow-hidden">
         
         {/* TEXTO 1 - 28px */}
-        <motion.div style={{ opacity: opacity1, y: y1 }} className="max-w-4xl absolute z-10">
-          <p className="text-xl md:text-[28px] font-light leading-relaxed text-zinc-400 text-center">
+        <motion.div style={{ opacity: opacity1, y: y1 }} className="max-w-4xl absolute text-center">
+          <p className="text-xl md:text-[28px] font-light leading-relaxed text-zinc-400">
             Trabalhamos lado a lado com artistas para <span className="text-white font-medium">potencializar sua música</span> e sua presença no mercado. Com estratégias personalizadas, ajudamos a construir uma identidade forte, alcançar novos públicos e posicionar seu trabalho de forma profissional.
           </p>
         </motion.div>
 
         {/* TEXTO 2 - 22px */}
-        <motion.div style={{ opacity: opacity2, y: y2 }} className="max-w-4xl absolute z-20">
-          <p className="text-[20px] md:text-[22px] font-light leading-relaxed text-zinc-500 text-center">
+        <motion.div style={{ opacity: opacity2, y: y2 }} className="max-w-4xl absolute text-center">
+          <p className="text-[20px] md:text-[22px] font-light leading-relaxed text-zinc-500">
             Seja você um cantor, produtor ou banda, oferecemos suporte completo, unindo criatividade, gestão e inovação para transformar ideias em projetos de alto impacto.
           </p>
         </motion.div>

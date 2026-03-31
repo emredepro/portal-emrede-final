@@ -1,225 +1,189 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
-import { ArrowRight, ChevronRight, ChevronLeft } from "lucide-react";
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import { ArrowRight, Menu, X, List, Grid3X3 } from "lucide-react";
 
 export default function HomePage() {
-  const [mounted, setMounted] = useState(false);
   const [isAdvanced, setIsAdvanced] = useState(false);
-  
-  const { scrollYProgress } = useScroll();
-  const scaleX = useSpring(scrollYProgress, { stiffness: 100, damping: 30 });
+  const [mounted, setMounted] = useState(false);
+  const [year, setYear] = useState<number | null>(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
-  useEffect(() => { setMounted(true); }, []);
+  const { scrollY } = useScroll();
+  const headerOpacity = useTransform(scrollY, [0, 80], [0, 1]);
+  const headerY = useTransform(scrollY, [0, 80], [-20, 0]);
+
+  useEffect(() => {
+    setMounted(true);
+    setYear(new Date().getFullYear());
+  }, []);
+
+  const colors = {
+    bg: "#0f1015",
+    azulNeon: "#12f2f2",
+    vinho: "#8e1e44",
+  };
+
+  const navItems = [
+    { name: "Home", href: "#home" },
+    { name: "Sobre", href: "#sobre" },
+    { name: "Consultoria & Mentoria", href: "#consultoria" },
+    { name: "Serviços & Combos", href: "#servicos" },
+    { name: "Hub", href: "#hub" },
+    { name: "Contato", href: "#contato" },
+  ];
+
+  const servicos = [
+    { id: "01", color: "#12f2f2", img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800" },
+    { id: "02", color: "#ff3b86", img: "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&q=80&w=800" },
+    { id: "03", color: "#f3dfd4", img: "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&q=80&w=800" },
+  ];
+
   if (!mounted) return <div className="min-h-screen bg-[#0f1015]" />;
 
   return (
-    <main className="bg-[#0f1015] text-white overflow-x-hidden font-sora">
+    <main className="min-h-screen bg-[#0f1015] text-white flex flex-col items-center relative overflow-x-hidden font-sora select-none selection:bg-zinc-700">
       
-      {/* GSAP STYLE PROGRESS BAR */}
-      <motion.div className="fixed top-0 left-0 right-0 h-[2px] bg-[#12f2f2] z-[120] origin-left" style={{ scaleX }} />
+      {/* MENU - COM FIBRA ÓTICA AZUL */}
+      <motion.header 
+        style={{ opacity: headerOpacity, y: headerY }}
+        className="fixed top-6 z-[100] w-full max-w-5xl px-4 pointer-events-auto"
+      >
+        <nav className="relative bg-zinc-950/90 border border-zinc-800 rounded-full px-8 py-3 flex items-center justify-between shadow-2xl overflow-hidden group">
+          <div className="absolute inset-0 rounded-full pointer-events-none varko-beam-overlay animation-beam-azul opacity-50 group-hover:opacity-100 transition-opacity"></div>
+          
+          <Link href="/" className="flex items-center relative z-10">
+            <Image src="/Prancheta 6.png" alt="Emrede Pro" width={90} height={24} className="h-6 w-auto object-contain" priority />
+          </Link>
+          
+          <ul className="hidden xl:flex gap-1 text-[10px] uppercase tracking-widest font-bold text-zinc-500 relative z-10">
+            {navItems.map((item) => (
+              <li key={item.name}>
+                <Link href={item.href} className="px-4 py-2 rounded-full border border-transparent hover:border-zinc-700 hover:text-white transition-all duration-300 block">
+                  {item.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
 
-      <Header />
+          <button className="xl:hidden relative z-10" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+            <Menu className="w-6 h-6 text-zinc-400" />
+          </button>
+        </nav>
+      </motion.header>
 
-      {/* 1. HERO */}
-      <Hero isAdvanced={isAdvanced} setIsAdvanced={setIsAdvanced} />
+      {/* HERO SECTION */}
+      <section id="home" className="min-h-screen flex flex-col items-center justify-center text-center relative w-full max-w-5xl px-6 pt-20">
+        <motion.div 
+          animate={{ backgroundColor: isAdvanced ? colors.vinho : colors.azulNeon, opacity: 0.15 }}
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-[140px] pointer-events-none"
+        />
 
-      {/* 2. SOBRE - SCROLL REVEAL */}
-      <SobreSection />
+        <div className="relative z-10 flex flex-col items-center mb-16">
+          <h1 className="text-5xl md:text-6xl font-extrabold tracking-tighter mb-6 leading-tight">
+            EMREDE <span style={{ color: isAdvanced ? colors.vinho : colors.azulNeon }} className="transition-colors duration-700">PRO</span>
+          </h1>
+          
+          <p className="text-zinc-500 text-lg md:text-xl max-w-xl mb-12 font-light leading-relaxed">
+            Tecnologia para <span className="text-white">transmutar</span> carreiras musicais através de dados e estratégia.
+          </p>
+        </div>
 
-      {/* 3. CONSULTORIA - HORIZONTAL SCROLL (IGUAL AO GSAP TEMPLATE) */}
-      <ConsultoriaHorizontal />
+        {/* SWITCH MATURIDADE */}
+        <div className="flex flex-col items-center gap-8 relative z-10 mb-12">
+          <div onClick={() => setIsAdvanced(!isAdvanced)} className="w-80 h-20 bg-zinc-900 border border-zinc-800 rounded-full p-2 cursor-pointer relative flex items-center">
+            <motion.div animate={{ x: isAdvanced ? 156 : 0 }} transition={{ type: "spring", stiffness: 300, damping: 30 }} style={{ backgroundColor: isAdvanced ? colors.vinho : colors.azulNeon }} className="absolute w-[150px] h-16 rounded-full shadow-lg" />
+            <div className="flex justify-around w-full z-10 font-bold text-[10px] uppercase tracking-widest">
+              <span className={!isAdvanced ? "text-black" : "text-zinc-500"}>Emergente</span>
+              <span className={isAdvanced ? "text-white" : "text-zinc-600"}>Exponencial</span>
+            </div>
+          </div>
+        </div>
 
-      {/* 4. SERVIÇOS - INERTIA PARALLAX */}
-      <ServicosInertia />
+        {/* BOTÃO SWOT - TRANSPARENTE COM HOVER AZUL NEON */}
+        <motion.div 
+          whileHover={{ scale: 1.05 }} 
+          whileTap={{ scale: 0.95 }} 
+          className="relative z-10 rounded-full p-[1px] overflow-hidden group shadow-2xl"
+        >
+          {/* FIBRA ÓTICA AZUL */}
+          <div className="absolute inset-0 rounded-full pointer-events-none varko-beam-overlay animation-beam-azul opacity-60 group-hover:opacity-100 transition-opacity"></div>
+          
+          <Link 
+            href="/login" 
+            className="relative flex items-center gap-3 bg-transparent hover:bg-[#12f2f2] text-white hover:text-black px-12 py-5 rounded-full font-bold text-xl border border-white/10 transition-all duration-500"
+          >
+            Iniciar Análise SWOT
+            <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
+          </Link>
+        </motion.div>
+      </section>
 
-      {/* 5. HUB - VARKO GRID (NOMES) */}
-      <HubVarko />
+      {/* SEÇÃO SERVIÇOS */}
+      <section id="servicos" className="py-32 w-full max-w-7xl mx-auto px-6 relative z-10 flex flex-col items-center">
+        <div className="flex items-center gap-1 bg-zinc-900 border border-zinc-800 rounded-full p-1 mb-20 scale-90">
+          <button onClick={() => setViewMode('list')} className={`px-4 py-2 rounded-full flex gap-2 items-center text-[9px] uppercase tracking-widest font-bold transition-all ${viewMode === 'list' ? 'bg-zinc-800 text-white' : 'text-zinc-500 hover:text-zinc-100'}`}><List size={12}/> List</button>
+          <button onClick={() => setViewMode('grid')} className={`px-4 py-2 rounded-full flex gap-2 items-center text-[9px] uppercase tracking-widest font-bold transition-all ${viewMode === 'grid' ? 'bg-white text-black' : 'text-zinc-500 hover:text-zinc-100'}`}><Grid3X3 size={12}/> Grid</button>
+        </div>
 
-      {/* 6. CONTATO - GSAP MARQUEE GIGANTE */}
-      <ContatoMarquee />
+        <div className={`grid gap-10 w-full transition-all duration-700 ${viewMode === 'grid' ? 'grid-cols-1 md:grid-cols-3' : 'grid-cols-1 max-w-[500px]'}`}>
+          {servicos.map((s) => (
+            <motion.div 
+              layout 
+              key={s.id} 
+              className="relative group rounded-[32px] overflow-hidden aspect-video transition-all shadow-2xl"
+            >
+              <div className="absolute inset-0 rounded-[32px] pointer-events-none varko-beam-overlay animation-beam-azul opacity-30 group-hover:opacity-90 transition-opacity z-20"></div>
+              <div className="absolute inset-0 border border-zinc-800/50 rounded-[32px] z-10"></div>
+              <div className="absolute inset-0 z-0">
+                <Image src={s.img} alt={`Serviço ${s.id}`} fill className="object-cover opacity-30 group-hover:opacity-50 transition-all duration-700 group-hover:scale-105" />
+              </div>
+              <div style={{ color: s.color }} className="absolute top-6 left-6 font-mono text-[9px] tracking-[0.6em] font-bold opacity-70 z-30">{s.id} /</div>
+            </motion.div>
+          ))}
+        </div>
+      </section>
 
-      <footer className="py-20 text-zinc-900 text-[10px] tracking-[0.8em] font-black text-center uppercase border-t border-zinc-900/30">
-        © EMREDE PRO / TRANSMUTAÇÃO 2026
-      </footer>
+      <footer className="py-20 text-zinc-900 text-[10px] tracking-[0.6em] uppercase font-black text-center w-full mt-auto relative z-10">© {year} EMREDE PRO / TRANSMUTAÇÃO CONSTANTE</footer>
 
       <style jsx global>{`
         @import url('https://fonts.googleapis.com/css2?family=Sora:wght@100;300;400;600;800&display=swap');
         html { scroll-behavior: smooth; }
-        body { background: #0f1015; margin: 0; -webkit-font-smoothing: antialiased; }
-        
+        body { font-family: 'Sora', sans-serif; background: #0f1015; color: white; -webkit-font-smoothing: antialiased; margin: 0; }
+
         .varko-beam-overlay {
-          position: absolute; inset: 0; border-radius: inherit; padding: 1.5px;
-          background: conic-gradient(from var(--border-angle), transparent 20%, #12f2f2 50%, transparent 80%) border-box;
+          position: absolute;
+          inset: 0;
+          border-radius: inherit;
+          padding: 1.5px;
+          background: linear-gradient(transparent, transparent) padding-box,
+                      conic-gradient(from var(--border-angle), transparent 20%, var(--beam-color) 50%, transparent 80%) border-box;
           -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-          mask-composite: exclude; animation: border-angle 4s linear infinite;
+          mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+          -webkit-mask-composite: xor;
+          mask-composite: exclude;
+          pointer-events: none;
+          z-index: 5;
+          animation: border-angle 4s linear infinite;
         }
-        @property --border-angle { syntax: "<angle>"; initial-value: 0deg; inherits: false; }
-        @keyframes border-angle { from { --border-angle: 0deg; } to { --border-angle: 360deg; } }
+
+        .animation-beam-azul { --beam-color: #12f2f2; }
+
+        @property --border-angle {
+          syntax: "<angle>";
+          initial-value: 0deg;
+          inherits: false;
+        }
+
+        @keyframes border-angle {
+          from { --border-angle: 0deg; }
+          to { --border-angle: 360deg; }
+        }
       `}</style>
     </main>
-  );
-}
-
-function Header() {
-  return (
-    <header className="fixed top-8 z-[100] w-full flex justify-center px-4">
-      <nav className="relative bg-zinc-950/80 border border-zinc-800 backdrop-blur-md rounded-full px-8 py-3 flex items-center gap-10 group">
-        <div className="varko-beam-overlay opacity-30 group-hover:opacity-100 transition-opacity"></div>
-        <Image src="/Prancheta 6.png" alt="Logo" width={90} height={24} className="h-6 w-auto object-contain" priority />
-        <div className="hidden md:flex gap-6 text-[10px] uppercase tracking-widest font-bold text-zinc-500 relative z-10">
-          {["Home", "Sobre", "Consultoria", "Serviços", "Hub", "Contato"].map(i => (
-            <Link key={i} href={`#${i.toLowerCase().replace('ç', 'c')}`} className="hover:text-white transition-colors">{i}</Link>
-          ))}
-        </div>
-      </nav>
-    </header>
-  );
-}
-
-function Hero({ isAdvanced, setIsAdvanced }: any) {
-  const colors = { azul: "#12f2f2", vinho: "#8e1e44" };
-  return (
-    <section id="home" className="h-screen flex flex-col items-center justify-center text-center px-6 relative overflow-hidden">
-      <motion.div animate={{ backgroundColor: isAdvanced ? colors.vinho : colors.azul, opacity: 0.15 }} className="absolute w-[500px] h-[500px] rounded-full blur-[140px] pointer-events-none" />
-      <h1 className="text-6xl md:text-8xl font-black tracking-tighter mb-4 z-10 uppercase italic">EMREDE <span style={{ color: isAdvanced ? colors.vinho : colors.azul }}>PRO</span></h1>
-      
-      <div onClick={() => setIsAdvanced(!isAdvanced)} className="w-80 h-20 bg-zinc-900 border border-zinc-800 rounded-full p-2 cursor-pointer relative flex items-center mb-12 z-10">
-        <motion.div animate={{ x: isAdvanced ? 156 : 0 }} style={{ backgroundColor: isAdvanced ? colors.vinho : colors.azul }} className="absolute w-[150px] h-16 rounded-full shadow-lg" />
-        <div className="flex justify-around w-full z-10 font-bold text-[10px] uppercase tracking-widest">
-          <span className={!isAdvanced ? "text-black" : "text-zinc-500"}>Emergente</span>
-          <span className={isAdvanced ? "text-white" : "text-zinc-600"}>Exponencial</span>
-        </div>
-      </div>
-
-      <motion.div whileHover={{ scale: 1.05 }} className="relative z-10 rounded-full p-[1px] overflow-hidden group">
-        <div className="varko-beam-overlay opacity-50"></div>
-        <Link href="#servicos" className="px-12 py-5 bg-transparent border border-white/10 text-white rounded-full font-bold uppercase tracking-widest hover:bg-[#12f2f2] hover:text-black transition-all flex items-center gap-3">
-          Iniciar Análise SWOT <ArrowRight size={18} />
-        </Link>
-      </motion.div>
-    </section>
-  );
-}
-
-function SobreSection() {
-  const ref = useRef(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  const opacity = useTransform(scrollYProgress, [0, 0.4, 0.6, 1], [0, 1, 1, 0]);
-  const y = useTransform(scrollYProgress, [0, 0.4], [100, 0]);
-
-  return (
-    <section id="sobre" ref={ref} className="min-h-screen flex items-center justify-center px-6 py-40">
-      <motion.div style={{ opacity, y }} className="max-w-4xl text-center">
-        <p className="text-3xl md:text-5xl font-light leading-tight text-zinc-400">
-          Trabalhamos lado a lado com artistas para <span className="text-white font-medium">potencializar sua música</span> e sua presença no mercado. Com estratégias personalizadas, ajudamos a construir uma identidade forte.
-        </p>
-      </motion.div>
-    </section>
-  );
-}
-
-function ConsultoriaHorizontal() {
-  const targetRef = useRef(null);
-  const { scrollYProgress } = useScroll({ target: targetRef });
-  const x = useTransform(scrollYProgress, [0, 1], ["0%", "-85%"]);
-  
-  const areas = [
-    "Identidade Artística", "Engenharia de Repertório", "Gestão de Escala", "Branding Artístico", "Marketing Digital", "Produção Audiovisual", "Direcionamento Fonográfico", "Distribuição Digital", "Otimização Streaming", "Gestão de Comunidade", "Estética de Persona", "Ecossistema Online", "Performance ao Vivo", "Acordos Estratégicos", "Gestão de Turnês", "Imersão Profissional", "Licenciamento Sync", "Análise de Dados", "Networking Estratégico", "Mentalidade Inovadora", "Maximização de Receitas"
-  ];
-
-  return (
-    <section ref={targetRef} className="relative h-[600vh] bg-zinc-950">
-      <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden">
-        <motion.div style={{ x }} className="flex gap-10 px-[10vw]">
-          {areas.map((area, i) => (
-            <div key={i} className="min-w-[80vw] md:min-w-[45vw] h-[60vh] bg-zinc-900 border border-zinc-800 rounded-[40px] p-12 flex flex-col justify-between group relative">
-              <div className="absolute top-0 left-0 h-1 bg-[#12f2f2] w-full scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-700" />
-              <span className="text-9xl font-black text-zinc-800/20">{(i+1).toString().padStart(2, '0')}</span>
-              <h3 className="text-4xl md:text-6xl font-black uppercase italic leading-none">{area}</h3>
-            </div>
-          ))}
-        </motion.div>
-        
-        <div className="absolute bottom-10 left-0 w-full px-[10vw] flex justify-between items-center text-zinc-600 font-bold text-[10px] tracking-[0.5em]">
-          <span>SCROLL PARA NAVEGAR</span>
-          <div className="flex gap-6 items-center">
-            <ChevronLeft className="opacity-30" />
-            <div className="w-40 h-[1px] bg-zinc-800 relative">
-               <motion.div style={{ scaleX: scrollYProgress }} className="absolute inset-0 bg-[#12f2f2] origin-left" />
-            </div>
-            <ChevronRight />
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function ServicosInertia() {
-  const servicos = [
-    "Ensaio fotográfico", "Cobertura de show", "Filmagem Aérea", "Gravação de clipe", "Assessoria de evento", 
-    "Direcionamento estratégico", "Mentorias", "Branding & Visual", "Produção musical", "Composição", 
-    "Registro Musical", "Kit Digital", "Lançamento", "Gestão de Imagem", "Playlist", 
-    "Conteúdo", "Redes Sociais", "Tráfego pago", "Funil", "Website"
-  ];
-
-  return (
-    <section id="servicos" className="py-40 px-6 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-x-20 gap-y-40">
-      {servicos.map((s, i) => (
-        <InertiaCard key={i} text={s} index={i} />
-      ))}
-    </section>
-  );
-}
-
-function InertiaCard({ text, index }: any) {
-  const ref = useRef(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  // Inércia real: velocidades diferentes baseadas no index
-  const y = useTransform(scrollYProgress, [0, 1], [index % 2 === 0 ? 0 : 150, index % 2 === 0 ? 0 : -150]);
-
-  return (
-    <motion.div ref={ref} style={{ y }} className="bg-zinc-900 border border-zinc-800 p-16 rounded-[40px] aspect-video flex flex-col justify-end group relative overflow-hidden">
-      <div className="varko-beam-overlay opacity-0 group-hover:opacity-40 transition-opacity"></div>
-      <h4 className="text-4xl font-black uppercase tracking-tighter italic leading-none">{text}</h4>
-    </motion.div>
-  );
-}
-
-function HubVarko() {
-  const marcas = ["PICUS COMPANY", "GRÍBEL", "EMREDE HUB", "CULTURAL", "ACELERA", "PROJETO X", "ESTUDIO", "LAB"];
-  return (
-    <section id="hub" className="py-40 border-y border-zinc-900 bg-zinc-950/50">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-zinc-900 border border-zinc-900 overflow-hidden rounded-[40px]">
-          {marcas.map((marca, i) => (
-            <div key={i} className="bg-[#0f1015] p-20 flex items-center justify-center group relative overflow-hidden">
-              <div className="varko-beam-overlay opacity-0 group-hover:opacity-30 transition-opacity"></div>
-              <span className="text-zinc-700 font-bold tracking-[0.4em] uppercase text-[10px] group-hover:text-white transition-colors">{marca}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function ContatoMarquee() {
-  return (
-    <section id="contato" className="py-20 overflow-hidden border-b border-zinc-900 cursor-pointer">
-      <div className="flex whitespace-nowrap">
-        {[1, 2].map((_, idx) => (
-          <motion.div key={idx} animate={{ x: [0, "-100%"] }} transition={{ duration: 25, repeat: Infinity, ease: "linear" }} className="flex">
-            <h2 className="text-[15vw] font-black uppercase tracking-tighter leading-none px-10 text-transparent opacity-10 hover:opacity-100 hover:text-[#12f2f2] transition-all duration-700" style={{ WebkitTextStroke: "1.5px #27272a" }}>
-              @EMREDEPRO • PROJETOS MUSICAIS • 228802-3803 •
-            </h2>
-          </motion.div>
-        ))}
-      </div>
-    </section>
   );
 }

@@ -3,8 +3,8 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
-import { ArrowRight, List, Grid3X3, Menu } from "lucide-react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { ArrowRight, List, Grid3X3 } from "lucide-react";
 
 export default function HomePage() {
   const [isAdvanced, setIsAdvanced] = useState(false);
@@ -28,7 +28,7 @@ export default function HomePage() {
   return (
     <main className="bg-[#0f1015] text-white flex flex-col items-center relative font-sora select-none overflow-x-hidden">
       
-      {/* MENU - FIBRA ÓTICA E HOVER RESTAURADOS */}
+      {/* MENU - FIBRA ÓTICA E HOVER */}
       <motion.header 
         style={{ opacity: headerOpacity, y: headerY }}
         className="fixed top-6 z-[100] w-full max-w-5xl px-4 pointer-events-auto"
@@ -48,7 +48,7 @@ export default function HomePage() {
         </nav>
       </motion.header>
 
-      {/* 1. HERO - SEM ITÁLICO NO EMREDE PRO */}
+      {/* 1. HERO - SEM ITÁLICO */}
       <section id="home" className="min-h-screen flex flex-col items-center justify-center text-center relative w-full max-w-5xl px-6">
         <motion.div animate={{ backgroundColor: isAdvanced ? "#8e1e44" : "#12f2f2", opacity: 0.15 }} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-[140px] pointer-events-none" />
         <h1 className="text-5xl md:text-6xl font-extrabold tracking-tighter mb-6 leading-tight">
@@ -61,7 +61,7 @@ export default function HomePage() {
             <span className={isAdvanced ? "text-white" : ""}>Exponencial</span>
           </div>
         </div>
-        <motion.div whileHover={{ scale: 1.05 }} className="relative z-10 rounded-full p-[1px] overflow-hidden group">
+        <motion.div whileHover={{ scale: 1.05 }} className="relative z-10 rounded-full p-[1px] overflow-hidden group shadow-2xl">
           <div className="absolute inset-0 rounded-full pointer-events-none varko-beam-overlay animation-beam-azul opacity-60 group-hover:opacity-100 transition-opacity"></div>
           <Link href="/login" className="relative flex items-center gap-3 bg-transparent hover:bg-[#12f2f2] text-white hover:text-black px-12 py-5 rounded-full font-bold text-xl border border-white/10 transition-all duration-500">
             Iniciar Análise SWOT <ArrowRight className="w-6 h-6" />
@@ -69,18 +69,18 @@ export default function HomePage() {
         </motion.div>
       </section>
 
-      {/* 2. SEÇÃO SOBRE - SCROLL TRIGGER (FADE SEQUENCIADO) */}
+      {/* 2. SEÇÃO SOBRE - SCROLL TRIGGER REAL */}
       <SobreSection />
 
-      {/* 3. SEÇÃO SERVIÇOS - RETÂNGULOS COM FIBRA ÓTICA */}
-      <section id="servicos" className="py-32 w-full max-w-7xl mx-auto px-6 relative z-10 flex flex-col items-center">
-        <div className="flex items-center gap-1 bg-zinc-900 border border-zinc-800 rounded-full p-1 mb-20 scale-90">
+      {/* 3. SEÇÃO SERVIÇOS - APROXIMADA E COM FIBRA ÓTICA */}
+      <section id="servicos" className="py-20 w-full max-w-7xl mx-auto px-6 relative z-10 flex flex-col items-center">
+        <div className="flex items-center gap-1 bg-zinc-900 border border-zinc-800 rounded-full p-1 mb-16 scale-90">
           <button onClick={() => setViewMode('list')} className={`px-4 py-2 rounded-full flex gap-2 items-center text-[9px] uppercase tracking-widest font-bold transition-all ${viewMode === 'list' ? 'bg-zinc-800 text-white' : 'text-zinc-500'}`}><List size={12}/> List</button>
           <button onClick={() => setViewMode('grid')} className={`px-4 py-2 rounded-full flex gap-2 items-center text-[9px] uppercase tracking-widest font-bold transition-all ${viewMode === 'grid' ? 'bg-white text-black' : 'text-zinc-500'}`}><Grid3X3 size={12}/> Grid</button>
         </div>
         <div className={`grid gap-10 w-full transition-all duration-700 ${viewMode === 'grid' ? 'grid-cols-1 md:grid-cols-3' : 'grid-cols-1 max-w-[500px]'}`}>
           {servicos.map((s) => (
-            <div key={s.id} className="relative group rounded-[32px] overflow-hidden aspect-video transition-all shadow-2xl">
+            <div key={s.id} className="relative group rounded-[32px] overflow-hidden aspect-video shadow-2xl">
               <div className="absolute inset-0 rounded-[32px] pointer-events-none varko-beam-overlay animation-beam-azul opacity-30 group-hover:opacity-90 transition-opacity z-20"></div>
               <div className="absolute inset-0 border border-zinc-800/50 rounded-[32px] z-10"></div>
               <Image src={s.img} alt={`Serviço ${s.id}`} fill className="object-cover opacity-30 group-hover:opacity-50 transition-all duration-700 group-hover:scale-105" />
@@ -113,33 +113,26 @@ export default function HomePage() {
 
 function SobreSection() {
   const containerRef = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"]
-  });
+  const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start start", "end end"] });
 
-  // Ajuste fino dos gatilhos: 
-  // Texto 1 (28px): Aparece de 0 a 0.2, fica até 0.4, some em 0.5
-  const opacity1 = useTransform(scrollYProgress, [0, 0.2, 0.4, 0.5], [0, 1, 1, 0]);
-  const y1 = useTransform(scrollYProgress, [0, 0.2], [50, 0]);
-
-  // Texto 2 (22px): Começa a nascer em 0.55, fica até 0.8, some em 1.0
-  const opacity2 = useTransform(scrollYProgress, [0.55, 0.7, 0.85, 1], [0, 1, 1, 0]);
-  const y2 = useTransform(scrollYProgress, [0.55, 0.7], [50, 0]);
+  // Transições de Opacidade Sequenciais
+  const opacity1 = useTransform(scrollYProgress, [0, 0.3, 0.45], [0, 1, 0]);
+  const opacity2 = useTransform(scrollYProgress, [0.55, 0.8, 1], [0, 1, 0]);
+  const y = useTransform(scrollYProgress, [0, 0.2], [40, 0]);
 
   return (
-    <section ref={containerRef} id="sobre" className="h-[400vh] relative w-full">
-      <div className="sticky top-0 h-screen w-full flex flex-col items-center justify-center px-6 overflow-hidden">
+    <section ref={containerRef} id="sobre" className="h-[200vh] relative w-full border-t border-zinc-900/50">
+      <div className="sticky top-0 h-screen w-full flex items-center justify-center px-6">
         
         {/* TEXTO 1 - 28px */}
-        <motion.div style={{ opacity: opacity1, y: y1 }} className="max-w-4xl absolute text-center">
+        <motion.div style={{ opacity: opacity1, y }} className="max-w-4xl absolute text-center px-4">
           <p className="text-xl md:text-[28px] font-light leading-relaxed text-zinc-400">
             Trabalhamos lado a lado com artistas para <span className="text-white font-medium">potencializar sua música</span> e sua presença no mercado. Com estratégias personalizadas, ajudamos a construir uma identidade forte, alcançar novos públicos e posicionar seu trabalho de forma profissional.
           </p>
         </motion.div>
 
         {/* TEXTO 2 - 22px */}
-        <motion.div style={{ opacity: opacity2, y: y2 }} className="max-w-4xl absolute text-center">
+        <motion.div style={{ opacity: opacity2 }} className="max-w-4xl absolute text-center px-4">
           <p className="text-[20px] md:text-[22px] font-light leading-relaxed text-zinc-500">
             Seja você um cantor, produtor ou banda, oferecemos suporte completo, unindo criatividade, gestão e inovação para transformar ideias em projetos de alto impacto.
           </p>

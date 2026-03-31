@@ -48,28 +48,22 @@ export default function HomePage() {
   return (
     <main className="min-h-screen bg-[#0f1015] text-white flex flex-col items-center relative overflow-x-hidden font-sora select-none selection:bg-zinc-700">
       
-      {/* MENU - BORDA FIXA + FIBRA ÓTICA AZUL NEON */}
+      {/* MENU - COM FIBRA ÓTICA AZUL */}
       <motion.header 
         style={{ opacity: headerOpacity, y: headerY }}
         className="fixed top-6 z-[100] w-full max-w-5xl px-4 pointer-events-auto"
       >
-        <nav className="relative bg-zinc-950 border border-zinc-800 rounded-full px-8 py-3 flex items-center justify-between shadow-2xl overflow-hidden group">
-          
-          {/* A FIBRA ÓTICA (LINHA DE LUZ AZUL NEON) */}
+        <nav className="relative bg-zinc-950/90 border border-zinc-800 rounded-full px-8 py-3 flex items-center justify-between shadow-2xl overflow-hidden group">
           <div className="absolute inset-0 rounded-full pointer-events-none varko-beam-overlay animation-beam-azul opacity-50 group-hover:opacity-100 transition-opacity"></div>
           
           <Link href="/" className="flex items-center relative z-10">
             <Image src="/Prancheta 6.png" alt="Emrede Pro" width={90} height={24} className="h-6 w-auto object-contain" priority />
           </Link>
           
-          {/* Desktop Menu - Borda sutil SEM FUNDO no Hover */}
           <ul className="hidden xl:flex gap-1 text-[10px] uppercase tracking-widest font-bold text-zinc-500 relative z-10">
             {navItems.map((item) => (
               <li key={item.name}>
-                <Link 
-                  href={item.href} 
-                  className="px-4 py-2 rounded-full border border-transparent hover:border-zinc-700 hover:text-white transition-all duration-300 block"
-                >
+                <Link href={item.href} className="px-4 py-2 rounded-full border border-transparent hover:border-zinc-700 hover:text-white transition-all duration-300 block">
                   {item.name}
                 </Link>
               </li>
@@ -85,7 +79,7 @@ export default function HomePage() {
       {/* HERO SECTION */}
       <section id="home" className="min-h-screen flex flex-col items-center justify-center text-center relative w-full max-w-5xl px-6 pt-20">
         <motion.div 
-          animate={{ backgroundColor: isAdvanced ? colors.vinho : colors.azulNeon, opacity: 0.20 }}
+          animate={{ backgroundColor: isAdvanced ? colors.vinho : colors.azulNeon, opacity: 0.15 }}
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-[140px] pointer-events-none"
         />
 
@@ -110,18 +104,21 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* BOTÃO SWOT - AGORA COM FIBRA ÓTICA AZUL E BORDA SUTIL */}
+        {/* BOTÃO SWOT - TRANSPARENTE COM HOVER AZUL NEON */}
         <motion.div 
-          whileHover={{ scale: 1.02 }} 
-          whileTap={{ scale: 0.98 }} 
-          className="relative z-10 rounded-full p-[1px] overflow-hidden group shadow-xl"
+          whileHover={{ scale: 1.05 }} 
+          whileTap={{ scale: 0.95 }} 
+          className="relative z-10 rounded-full p-[1px] overflow-hidden group shadow-2xl"
         >
-          {/* FIBRA ÓTICA DO BOTÃO (AZUL NEON) */}
+          {/* FIBRA ÓTICA AZUL */}
           <div className="absolute inset-0 rounded-full pointer-events-none varko-beam-overlay animation-beam-azul opacity-60 group-hover:opacity-100 transition-opacity"></div>
           
-          <Link href="/login" className="relative flex items-center gap-3 bg-white text-black px-10 py-4 rounded-full font-bold text-xl border border-zinc-200/50 transition-all">
+          <Link 
+            href="/login" 
+            className="relative flex items-center gap-3 bg-transparent hover:bg-[#12f2f2] text-white hover:text-black px-12 py-5 rounded-full font-bold text-xl border border-white/10 transition-all duration-500"
+          >
             Iniciar Análise SWOT
-            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
           </Link>
         </motion.div>
       </section>
@@ -133,13 +130,19 @@ export default function HomePage() {
           <button onClick={() => setViewMode('grid')} className={`px-4 py-2 rounded-full flex gap-2 items-center text-[9px] uppercase tracking-widest font-bold transition-all ${viewMode === 'grid' ? 'bg-white text-black' : 'text-zinc-500 hover:text-zinc-100'}`}><Grid3X3 size={12}/> Grid</button>
         </div>
 
-        <div className={`grid gap-6 w-full transition-all duration-700 ${viewMode === 'grid' ? 'grid-cols-1 md:grid-cols-3' : 'grid-cols-1 max-w-[500px]'}`}>
+        <div className={`grid gap-10 w-full transition-all duration-700 ${viewMode === 'grid' ? 'grid-cols-1 md:grid-cols-3' : 'grid-cols-1 max-w-[500px]'}`}>
           {servicos.map((s) => (
-            <motion.div layout key={s.id} className="bg-zinc-900/40 border border-zinc-800/50 rounded-[28px] overflow-hidden relative group aspect-video p-10 flex flex-col justify-end shadow-2xl hover:border-zinc-700">
+            <motion.div 
+              layout 
+              key={s.id} 
+              className="relative group rounded-[32px] overflow-hidden aspect-video transition-all shadow-2xl"
+            >
+              <div className="absolute inset-0 rounded-[32px] pointer-events-none varko-beam-overlay animation-beam-azul opacity-30 group-hover:opacity-90 transition-opacity z-20"></div>
+              <div className="absolute inset-0 border border-zinc-800/50 rounded-[32px] z-10"></div>
               <div className="absolute inset-0 z-0">
                 <Image src={s.img} alt={`Serviço ${s.id}`} fill className="object-cover opacity-30 group-hover:opacity-50 transition-all duration-700 group-hover:scale-105" />
               </div>
-              <div style={{ color: s.color }} className="absolute top-6 left-6 font-mono text-[9px] tracking-[0.6em] font-bold opacity-70 z-10">{s.id} /</div>
+              <div style={{ color: s.color }} className="absolute top-6 left-6 font-mono text-[9px] tracking-[0.6em] font-bold opacity-70 z-30">{s.id} /</div>
             </motion.div>
           ))}
         </div>
@@ -147,38 +150,16 @@ export default function HomePage() {
 
       <footer className="py-20 text-zinc-900 text-[10px] tracking-[0.6em] uppercase font-black text-center w-full mt-auto relative z-10">© {year} EMREDE PRO / TRANSMUTAÇÃO CONSTANTE</footer>
 
-      {/* MOBILE MENU */}
-      <AnimatePresence>
-        {isMenuOpen && (
-          <motion.div 
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[200] bg-black flex flex-col items-center justify-center p-8 xl:hidden font-sora"
-          >
-            <button className="absolute top-10 right-10" onClick={() => setIsMenuOpen(false)}>
-              <X className="w-8 h-8 text-zinc-400" />
-            </button>
-            <ul className="flex flex-col gap-8 text-2xl font-bold text-center text-zinc-200">
-              {navItems.map((item) => (
-                <li key={item.name} onClick={() => setIsMenuOpen(false)}>
-                  <Link href={item.href}>{item.name}</Link>
-                </li>
-              ))}
-            </ul>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       <style jsx global>{`
         @import url('https://fonts.googleapis.com/css2?family=Sora:wght@100;300;400;600;800&display=swap');
         html { scroll-behavior: smooth; }
         body { font-family: 'Sora', sans-serif; background: #0f1015; color: white; -webkit-font-smoothing: antialiased; margin: 0; }
 
-        /* A FIBRA ÓTICA (BEAM EFFECT) */
         .varko-beam-overlay {
           position: absolute;
           inset: 0;
-          border-radius: 9999px;
-          padding: 1.5px; /* Espessura da fibra */
+          border-radius: inherit;
+          padding: 1.5px;
           background: linear-gradient(transparent, transparent) padding-box,
                       conic-gradient(from var(--border-angle), transparent 20%, var(--beam-color) 50%, transparent 80%) border-box;
           -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
@@ -190,10 +171,7 @@ export default function HomePage() {
           animation: border-angle 4s linear infinite;
         }
 
-        /* ANIMAÇÃO AZUL NEON */
-        .animation-beam-azul {
-          --beam-color: #12f2f2; /* Azul Neon Oficial */
-        }
+        .animation-beam-azul { --beam-color: #12f2f2; }
 
         @property --border-angle {
           syntax: "<angle>";

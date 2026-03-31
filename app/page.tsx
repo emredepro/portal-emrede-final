@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { ArrowRight, List, Grid3X3 } from "lucide-react";
 
 export default function HomePage() {
@@ -11,13 +11,13 @@ export default function HomePage() {
   const [mounted, setMounted] = useState(false);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
-  const { scrollY } = useScroll();
-  const headerOpacity = useTransform(scrollY, [0, 80], [0, 1]);
-  const headerY = useTransform(scrollY, [0, 80], [-20, 0]);
-
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  const { scrollY } = useScroll();
+  const headerOpacity = useTransform(scrollY, [0, 80], [0, 1]);
+  const headerY = useTransform(scrollY, [0, 80], [-20, 0]);
 
   const navItems = [
     { name: "Home", href: "#home" },
@@ -26,12 +26,6 @@ export default function HomePage() {
     { name: "Serviços & Combos", href: "#servicos" },
     { name: "Hub", href: "#hub" },
     { name: "Contato", href: "#contato" },
-  ];
-
-  const servicos = [
-    { id: "01", color: "#12f2f2", img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800" },
-    { id: "02", color: "#ff3b86", img: "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&q=80&w=800" },
-    { id: "03", color: "#f3dfd4", img: "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&q=80&w=800" },
   ];
 
   if (!mounted) return <div className="min-h-screen bg-[#0f1015]" />;
@@ -79,25 +73,8 @@ export default function HomePage() {
         </Link>
       </section>
 
-      {/* 2. SEÇÃO SOBRE - 28PX + SCROLL TRIGGER */}
+      {/* 2. SEÇÃO SOBRE - SCROLL TRIGGER REAL (TEXT REVEAL) */}
       <SobreSection />
-
-      {/* SEÇÃO SERVIÇOS */}
-      <section id="servicos" className="py-32 w-full max-w-7xl mx-auto px-6 relative z-10 flex flex-col items-center">
-        <div className="flex bg-zinc-900 border border-zinc-800 rounded-full p-1 mb-20 scale-90">
-          <button onClick={() => setViewMode('list')} className={`px-4 py-2 rounded-full flex gap-2 items-center text-[9px] uppercase tracking-widest font-bold transition-all ${viewMode === 'list' ? 'bg-zinc-800 text-white' : 'text-zinc-500 hover:text-zinc-100'}`}><List size={12}/> List</button>
-          <button onClick={() => setViewMode('grid')} className={`px-4 py-2 rounded-full flex gap-2 items-center text-[9px] uppercase tracking-widest font-bold transition-all ${viewMode === 'grid' ? 'bg-white text-black' : 'text-zinc-500 hover:text-zinc-100'}`}><Grid3X3 size={12}/> Grid</button>
-        </div>
-
-        <div className={`grid gap-10 w-full transition-all duration-700 ${viewMode === 'grid' ? 'grid-cols-1 md:grid-cols-3' : 'grid-cols-1 max-w-[500px]'}`}>
-          {servicos.map((s) => (
-            <div key={s.id} className="relative group rounded-[32px] overflow-hidden aspect-video transition-all shadow-2xl border border-zinc-800/50">
-              <Image src={s.img} alt={`Serviço ${s.id}`} fill className="object-cover opacity-30 group-hover:opacity-50 transition-all duration-700 group-hover:scale-105" />
-              <div style={{ color: s.color }} className="absolute top-6 left-6 font-mono text-[9px] tracking-[0.6em] font-bold opacity-70">{s.id} /</div>
-            </div>
-          ))}
-        </div>
-      </section>
 
       <footer className="py-20 text-zinc-800 text-[10px] tracking-[0.5em] uppercase font-bold">© EMREDE PRO</footer>
 
@@ -111,28 +88,41 @@ export default function HomePage() {
 }
 
 function SobreSection() {
-  const ref = useRef(null);
+  const sectionRef = useRef(null);
+  
+  // Captura o progresso do scroll apenas nesta seção
   const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "center center"]
+    target: sectionRef,
+    offset: ["start end", "end start"]
   });
 
-  const opacity = useTransform(scrollYProgress, [0, 0.7, 1], [0, 1, 1]);
-  const y = useTransform(scrollYProgress, [0, 1], [60, 0]);
+  // Transforma o scroll em opacidade e movimento para o efeito "Scroll Trigger"
+  const opacity = useTransform(scrollYProgress, [0.1, 0.4, 0.6, 0.9], [0, 1, 1, 0]);
+  const y = useTransform(scrollYProgress, [0.1, 0.4], [100, 0]);
+  const scale = useTransform(scrollYProgress, [0.1, 0.4], [0.8, 1]);
 
   return (
-    <section id="sobre" ref={ref} className="min-h-screen flex flex-col items-center justify-center px-6 py-40 border-t border-zinc-900/50 relative">
-      <motion.div style={{ opacity, y }} className="max-w-4xl text-center">
-        <p className="text-xl md:text-[28px] font-light leading-relaxed text-zinc-400">
-          Trabalhamos lado a lado com artistas para <span className="text-white font-medium">potencializar sua música</span> e sua presença no mercado. Com estratégias personalizadas, ajudamos a construir uma identidade forte, alcançar novos públicos e posicionar seu trabalho de forma profissional.
-        </p>
+    <section id="sobre" ref={sectionRef} className="h-[150vh] flex flex-col items-center justify-start px-6 relative border-t border-zinc-900/50">
+      <div className="sticky top-0 h-screen flex flex-col items-center justify-center max-w-4xl w-full">
         <motion.p 
-          style={{ opacity: useTransform(scrollYProgress, [0.5, 0.9, 1], [0, 1, 1]) }}
-          className="text-lg md:text-xl font-light leading-relaxed text-zinc-500 mt-12"
+          style={{ opacity, y, scale }}
+          className="text-xl md:text-[28px] font-light leading-relaxed text-zinc-300 text-center"
+        >
+          Trabalhamos lado a lado com artistas para <span className="text-white font-medium">potencializar sua música</span> e sua presença no mercado. Com estratégias personalizadas, ajudamos a construir uma identidade forte, alcançar novos públicos e posicionar seu trabalho de forma profissional.
+        </motion.p>
+        
+        <motion.div 
+          style={{ opacity: useTransform(scrollYProgress, [0.4, 0.6], [0, 1]) }}
+          className="mt-12 h-px w-20 bg-[#12f2f2]"
+        />
+        
+        <motion.p 
+          style={{ opacity: useTransform(scrollYProgress, [0.5, 0.7], [0, 1]) }}
+          className="text-lg md:text-xl font-light leading-relaxed text-zinc-500 mt-12 text-center"
         >
           Seja você um cantor, produtor ou banda, oferecemos suporte completo, unindo criatividade, gestão e inovação para transformar ideias em projetos de alto impacto.
         </motion.p>
-      </motion.div>
+      </div>
     </section>
   );
 }

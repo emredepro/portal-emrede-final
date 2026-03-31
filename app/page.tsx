@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useTransform, useInView } from "framer-motion";
 import { ArrowRight, Menu, X, List, Grid3X3 } from "lucide-react";
 
 export default function HomePage() {
@@ -104,13 +104,12 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* BOTÃO SWOT - TRANSPARENTE COM HOVER AZUL NEON */}
+        {/* BOTÃO SWOT */}
         <motion.div 
           whileHover={{ scale: 1.05 }} 
           whileTap={{ scale: 0.95 }} 
           className="relative z-10 rounded-full p-[1px] overflow-hidden group shadow-2xl"
         >
-          {/* FIBRA ÓTICA AZUL */}
           <div className="absolute inset-0 rounded-full pointer-events-none varko-beam-overlay animation-beam-azul opacity-60 group-hover:opacity-100 transition-opacity"></div>
           
           <Link 
@@ -122,6 +121,9 @@ export default function HomePage() {
           </Link>
         </motion.div>
       </section>
+
+      {/* 2. SEÇÃO SOBRE - SCROLL TRIGGER (REVEAL) */}
+      <SobreSection />
 
       {/* SEÇÃO SERVIÇOS */}
       <section id="servicos" className="py-32 w-full max-w-7xl mx-auto px-6 relative z-10 flex flex-col items-center">
@@ -185,5 +187,36 @@ export default function HomePage() {
         }
       `}</style>
     </main>
+  );
+}
+
+/* COMPONENTE DA SEÇÃO SOBRE COM EFEITO SCROLL TRIGGER */
+function SobreSection() {
+  const ref = useRef(null);
+  // O margin: "-20%" faz com que a animação comece um pouco depois que a seção entra na tela
+  const isInView = useInView(ref, { once: false, margin: "-20%" });
+
+  return (
+    <section id="sobre" ref={ref} className="min-h-screen flex items-center justify-center px-6 py-32 border-t border-zinc-900/50">
+      <div className="max-w-4xl text-center">
+        <motion.p 
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="text-2xl md:text-4xl font-light leading-relaxed text-zinc-400"
+        >
+          Trabalhamos lado a lado com artistas para <span className="text-white font-medium">potencializar sua música</span> e sua presença no mercado. Com estratégias personalizadas, ajudamos a construir uma identidade forte, alcançar novos públicos e posicionar seu trabalho de forma profissional.
+        </motion.p>
+
+        <motion.p 
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+          transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
+          className="text-lg md:text-xl font-light leading-relaxed text-zinc-500 mt-12"
+        >
+          Seja você um cantor, produtor ou banda, oferecemos suporte completo, desde a criação de conteúdo até campanhas de divulgação. Mais que uma agência, somos um hub que impulsiona projetos, unindo criatividade, gestão e inovação para transformar ideias em projetos de alto impacto.
+        </motion.p>
+      </div>
+    </section>
   );
 }

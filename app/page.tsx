@@ -3,29 +3,21 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
-import { ArrowRight, Menu, X, List, Grid3X3 } from "lucide-react";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+import { ArrowRight, List, Grid3X3, Menu } from "lucide-react";
 
 export default function HomePage() {
   const [isAdvanced, setIsAdvanced] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const [year, setYear] = useState<number | null>(null);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const { scrollY } = useScroll();
   const headerOpacity = useTransform(scrollY, [0, 80], [0, 1]);
   const headerY = useTransform(scrollY, [0, 80], [-20, 0]);
-
-  useEffect(() => {
-    setMounted(true);
-    setYear(new Date().getFullYear());
-  }, []);
-
-  const colors = {
-    bg: "#0f1015",
-    azulNeon: "#12f2f2",
-    vinho: "#8e1e44",
-  };
 
   const servicos = [
     { id: "01", color: "#12f2f2", img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800" },
@@ -36,9 +28,9 @@ export default function HomePage() {
   if (!mounted) return <div className="min-h-screen bg-[#0f1015]" />;
 
   return (
-    <main className="min-h-screen bg-[#0f1015] text-white flex flex-col items-center relative overflow-x-hidden font-sora select-none selection:bg-zinc-700">
+    <main className="bg-[#0f1015] text-white flex flex-col items-center relative font-sora select-none selection:bg-zinc-700">
       
-      {/* MENU - RESTAURADO COM FIBRA ÓTICA */}
+      {/* MENU - COM FIBRA ÓTICA E CONTORNO NO HOVER */}
       <motion.header 
         style={{ opacity: headerOpacity, y: headerY }}
         className="fixed top-6 z-[100] w-full max-w-5xl px-4 pointer-events-auto"
@@ -62,16 +54,16 @@ export default function HomePage() {
         </nav>
       </motion.header>
 
-      {/* HERO SECTION - SEM ITÁLICO NO TÍTULO */}
-      <section id="home" className="min-h-screen flex flex-col items-center justify-center text-center relative w-full max-w-5xl px-6 pt-20">
+      {/* 1. HERO SECTION - SEM ITÁLICO */}
+      <section id="home" className="min-h-screen flex flex-col items-center justify-center text-center relative w-full max-w-5xl px-6">
         <motion.div 
-          animate={{ backgroundColor: isAdvanced ? colors.vinho : colors.azulNeon, opacity: 0.15 }}
+          animate={{ backgroundColor: isAdvanced ? "#8e1e44" : "#12f2f2", opacity: 0.15 }}
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-[140px] pointer-events-none"
         />
 
         <div className="relative z-10 flex flex-col items-center mb-16">
           <h1 className="text-5xl md:text-6xl font-extrabold tracking-tighter mb-6 leading-tight">
-            EMREDE <span style={{ color: isAdvanced ? colors.vinho : colors.azulNeon }} className="transition-colors duration-700">PRO</span>
+            EMREDE <span className={isAdvanced ? "text-[#8e1e44]" : "text-[#12f2f2]"}>PRO</span>
           </h1>
           <p className="text-zinc-500 text-lg md:text-xl max-w-xl mb-12 font-light leading-relaxed">
             Tecnologia para <span className="text-white">transmutar</span> carreiras musicais através de dados e estratégia.
@@ -80,7 +72,7 @@ export default function HomePage() {
 
         <div className="flex flex-col items-center gap-8 relative z-10 mb-12">
           <div onClick={() => setIsAdvanced(!isAdvanced)} className="w-80 h-20 bg-zinc-900 border border-zinc-800 rounded-full p-2 cursor-pointer relative flex items-center">
-            <motion.div animate={{ x: isAdvanced ? 156 : 0 }} transition={{ type: "spring", stiffness: 300, damping: 30 }} style={{ backgroundColor: isAdvanced ? colors.vinho : colors.azulNeon }} className="absolute w-[150px] h-16 rounded-full shadow-lg" />
+            <motion.div animate={{ x: isAdvanced ? 156 : 0 }} className={`absolute w-[150px] h-16 rounded-full shadow-lg ${isAdvanced ? 'bg-[#8e1e44]' : 'bg-[#12f2f2]'}`} />
             <div className="flex justify-around w-full z-10 font-bold text-[10px] uppercase tracking-widest text-zinc-500">
               <span className={!isAdvanced ? "text-black" : ""}>Emergente</span>
               <span className={isAdvanced ? "text-white" : ""}>Exponencial</span>
@@ -88,7 +80,7 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* BOTÃO SWOT - RESTAURADO COM FIBRA ÓTICA */}
+        {/* BOTÃO SWOT COM FIBRA ÓTICA */}
         <motion.div whileHover={{ scale: 1.05 }} className="relative z-10 rounded-full p-[1px] overflow-hidden group">
           <div className="absolute inset-0 rounded-full pointer-events-none varko-beam-overlay animation-beam-azul opacity-60 group-hover:opacity-100 transition-opacity"></div>
           <Link href="/login" className="relative flex items-center gap-3 bg-transparent hover:bg-[#12f2f2] text-white hover:text-black px-12 py-5 rounded-full font-bold text-xl border border-white/10 transition-all duration-500">
@@ -97,10 +89,10 @@ export default function HomePage() {
         </motion.div>
       </section>
 
-      {/* SEÇÃO SOBRE - SCROLL TRIGGER REAL */}
+      {/* 2. SEÇÃO SOBRE - SCROLL TRIGGER (REVEAL) */}
       <SobreSection />
 
-      {/* SEÇÃO SERVIÇOS - RESTAURADO COM CAIXAS E FIBRA ÓTICA */}
+      {/* 3. SEÇÃO SERVIÇOS - CAIXAS COM FIBRA ÓTICA */}
       <section id="servicos" className="py-32 w-full max-w-7xl mx-auto px-6 relative z-10 flex flex-col items-center">
         <div className="flex items-center gap-1 bg-zinc-900 border border-zinc-800 rounded-full p-1 mb-20 scale-90">
           <button onClick={() => setViewMode('list')} className={`px-4 py-2 rounded-full flex gap-2 items-center text-[9px] uppercase tracking-widest font-bold transition-all ${viewMode === 'list' ? 'bg-zinc-800 text-white' : 'text-zinc-500'}`}><List size={12}/> List</button>
@@ -119,7 +111,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <footer className="py-20 text-zinc-900 text-[10px] tracking-[0.6em] uppercase font-black text-center w-full relative z-10">© {year} EMREDE PRO</footer>
+      <footer className="py-20 text-zinc-900 text-[10px] tracking-[0.6em] uppercase font-black text-center w-full relative z-10">© 2026 EMREDE PRO</footer>
 
       <style jsx global>{`
         @import url('https://fonts.googleapis.com/css2?family=Sora:wght@100;300;400;600;800&display=swap');
@@ -142,23 +134,41 @@ export default function HomePage() {
 }
 
 function SobreSection() {
-  const sectionRef = useRef(null);
-  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start end", "end start"] });
-  const opacity = useTransform(scrollYProgress, [0.1, 0.4, 0.7, 0.9], [0, 1, 1, 0]);
-  const y = useTransform(scrollYProgress, [0.1, 0.4], [100, 0]);
+  const containerRef = useRef(null);
+  
+  // Captura o scroll relativo a essa seção específica
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"]
+  });
+
+  // O texto 1 (28px) aparece e desaparece conforme o scroll
+  const opacityText1 = useTransform(scrollYProgress, [0.1, 0.3, 0.5, 0.7], [0, 1, 1, 0]);
+  const yText1 = useTransform(scrollYProgress, [0.1, 0.3], [100, 0]);
+
+  // O texto 2 (22px) entra um pouco depois
+  const opacityText2 = useTransform(scrollYProgress, [0.3, 0.5, 0.7, 0.9], [0, 1, 1, 0]);
+  const yText2 = useTransform(scrollYProgress, [0.3, 0.5], [100, 0]);
 
   return (
-    <section id="sobre" ref={sectionRef} className="h-[150vh] flex flex-col items-center relative border-t border-zinc-900/50">
-      <div className="sticky top-0 h-screen flex flex-col items-center justify-center max-w-4xl px-6">
-        <motion.p style={{ opacity, y }} className="text-xl md:text-[28px] font-light leading-relaxed text-zinc-400 text-center">
-          Trabalhamos lado a lado com artistas para <span className="text-white font-medium">potencializar sua música</span> e sua presença no mercado. Com estratégias personalizadas, ajudamos a construir uma identidade forte, alcançar novos públicos e posicionar seu trabalho de forma profissional.
-        </motion.p>
-        <motion.p 
-          style={{ opacity: useTransform(scrollYProgress, [0.4, 0.6], [0, 1]) }}
-          className="text-[20px] md:text-[22px] font-light leading-relaxed text-zinc-500 mt-12 text-center"
-        >
-          Seja você um cantor, produtor ou banda, oferecemos suporte completo, unindo criatividade, gestão e inovação para transformar ideias em projetos de alto impacto.
-        </motion.p>
+    <section ref={containerRef} id="sobre" className="h-[250vh] relative w-full">
+      {/* O sticky garante que a seção "trave" na tela enquanto o scroll acontece */}
+      <div className="sticky top-0 h-screen w-full flex flex-col items-center justify-center px-6 overflow-hidden">
+        
+        {/* TEXTO 1 - 28px */}
+        <motion.div style={{ opacity: opacityText1, y: yText1 }} className="max-w-4xl absolute">
+          <p className="text-xl md:text-[28px] font-light leading-relaxed text-zinc-400 text-center">
+            Trabalhamos lado a lado com artistas para <span className="text-white font-medium">potencializar sua música</span> e sua presença no mercado. Com estratégias personalizadas, ajudamos a construir uma identidade forte, alcançar novos públicos e posicionar seu trabalho de forma profissional.
+          </p>
+        </motion.div>
+
+        {/* TEXTO 2 - 22px */}
+        <motion.div style={{ opacity: opacityText2, y: yText2 }} className="max-w-4xl absolute">
+          <p className="text-[20px] md:text-[22px] font-light leading-relaxed text-zinc-500 text-center">
+            Seja você um cantor, produtor ou banda, oferecemos suporte completo, unindo criatividade, gestão e inovação para transformar ideias em projetos de alto impacto.
+          </p>
+        </motion.div>
+        
       </div>
     </section>
   );

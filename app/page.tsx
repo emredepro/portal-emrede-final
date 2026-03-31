@@ -48,14 +48,14 @@ export default function HomePage() {
   return (
     <main className="min-h-screen bg-[#0f1015] text-white flex flex-col items-center relative overflow-x-hidden font-sora select-none">
       
-      {/* MENU - COM BORDA + FIBRA ÓTICA */}
+      {/* MENU - BORDA FIXA + FIBRA ÓTICA VARKO */}
       <motion.header 
         style={{ opacity: headerOpacity, y: headerY }}
         className="fixed top-6 z-[100] w-full max-w-5xl px-4 pointer-events-auto"
       >
-        <nav className="relative bg-zinc-950 border border-zinc-800 rounded-full px-8 py-3 flex items-center justify-between shadow-2xl overflow-hidden group">
-          {/* EFEITO FIBRA ÓTICA (BEAM) */}
-          <div className="absolute inset-0 rounded-full pointer-events-none animation-border-beam opacity-40"></div>
+        <nav className="relative bg-zinc-950 border border-zinc-800 rounded-full px-8 py-3 flex items-center justify-between shadow-2xl">
+          {/* A FIBRA ÓTICA (LINHA DE LUZ) */}
+          <div className="absolute inset-0 rounded-full pointer-events-none varko-beam-border"></div>
           
           <Link href="/" className="flex items-center relative z-10">
             <Image src="/Prancheta 6.png" alt="Emrede Pro" width={90} height={24} className="h-6 w-auto object-contain" priority />
@@ -105,15 +105,17 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* BOTÃO SWOT - AGORA COM FIBRA ÓTICA E BORDA SUTIL */}
-        <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="relative z-10 rounded-full p-[1px] overflow-hidden group">
-          {/* FIBRA ÓTICA DO BOTÃO */}
-          <div className="absolute inset-0 rounded-full pointer-events-none animation-border-beam opacity-60"></div>
-          
-          <Link href="/login" className="relative flex items-center gap-3 bg-white text-black px-10 py-4 rounded-full font-bold text-xl border border-zinc-200 shadow-xl transition-all">
-            Iniciar Análise SWOT
-            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-          </Link>
+        {/* BOTÃO SWOT - COM FIBRA ÓTICA + BORDA */}
+        <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="relative z-10">
+          <div className="relative bg-white text-black px-12 py-5 rounded-full font-bold text-xl overflow-hidden group">
+            {/* A FIBRA ÓTICA DO BOTÃO */}
+            <div className="absolute inset-0 rounded-full pointer-events-none varko-beam-border !border-black/20"></div>
+            
+            <Link href="/login" className="flex items-center gap-3 relative z-10">
+              Iniciar Análise SWOT
+              <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </div>
         </motion.div>
       </section>
 
@@ -143,13 +145,13 @@ export default function HomePage() {
         html { scroll-behavior: smooth; }
         body { font-family: 'Sora', sans-serif; background: #0f1015; color: white; -webkit-font-smoothing: antialiased; margin: 0; }
 
-        .animation-border-beam {
+        /* A FIBRA ÓTICA VARKO - LINHA NITIDA EM CIMA DA BORDA */
+        .varko-beam-border {
           position: absolute;
-          inset: 0;
-          border: 2px solid transparent;
-          border-radius: 9999px;
-          /* O segredo: padding-box mantém o fundo, border-box anima a borda */
-          background: linear-gradient(transparent, transparent) padding-box,
+          inset: -1px;
+          border: 1.5px solid transparent;
+          border-radius: inherit;
+          background: linear-gradient(#0f1015, #0f1015) padding-box,
                       conic-gradient(from var(--border-angle), transparent 20%, #fff 50%, transparent 80%) border-box;
           animation: border-angle 4s linear infinite;
         }

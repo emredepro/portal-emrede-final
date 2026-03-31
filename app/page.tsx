@@ -48,17 +48,17 @@ export default function HomePage() {
   return (
     <main className="min-h-screen bg-[#0f1015] text-white flex flex-col items-center relative overflow-x-hidden font-sora select-none">
       
-      {/* MENU COM EFEITO FIBRA ÓTICA SUTIL */}
+      {/* MENU - LOGO H-6 / FIBRA ÓTICA */}
       <motion.header 
         style={{ opacity: headerOpacity, y: headerY }}
         className="fixed top-6 z-[100] w-full max-w-5xl px-4 pointer-events-auto"
       >
-        <nav className="relative group bg-zinc-950 border border-zinc-800/50 rounded-full px-8 py-3 flex items-center justify-between shadow-2xl overflow-hidden">
-          {/* Luz de Fibra Ótica Animada no Menu */}
-          <div className="absolute inset-0 border-2 border-transparent rounded-full border-beam opacity-20 pointer-events-none"></div>
+        <nav className="relative bg-zinc-950 border border-zinc-800/50 rounded-full px-8 py-3 flex items-center justify-between shadow-2xl overflow-hidden group">
+          {/* Efeito Fibra Ótica (Beam) */}
+          <div className="absolute inset-0 rounded-full border border-transparent [mask-image:linear-gradient(white,white)] before:absolute before:inset-0 before:bg-[conic-gradient(from_0deg,transparent_0%,#12f2f2_50%,transparent_100%)] before:animate-[spin_4s_linear_infinite] opacity-30"></div>
           
           <Link href="/" className="flex items-center relative z-10">
-            <Image src="/Prancheta 6.png" alt="Emrede Pro" width={110} height={30} className="h-8 w-auto object-contain" priority />
+            <Image src="/Prancheta 6.png" alt="Emrede Pro" width={90} height={24} className="h-6 w-auto object-contain" priority />
           </Link>
           
           <ul className="hidden xl:flex gap-1 text-[10px] uppercase tracking-widest font-bold text-zinc-500 relative z-10">
@@ -77,7 +77,7 @@ export default function HomePage() {
         </nav>
       </motion.header>
 
-      {/* HERO SECTION */}
+      {/* HERO SECTION - BOTÃO REDUZIDO */}
       <section id="home" className="min-h-screen flex flex-col items-center justify-center text-center relative w-full max-w-5xl px-6">
         <motion.div 
           animate={{ backgroundColor: isAdvanced ? colors.vinho : colors.azulNeon, opacity: 0.20 }}
@@ -89,22 +89,22 @@ export default function HomePage() {
             EMREDE <span style={{ color: isAdvanced ? colors.vinho : colors.azulNeon }} className="transition-colors duration-700">PRO</span>
           </h1>
           
-          <p className="text-zinc-500 text-lg md:text-xl max-w-2xl mb-14 font-light">
+          <p className="text-zinc-500 text-lg md:text-xl max-w-2xl mb-12 font-light">
             Tecnologia para <span className="text-white">transmutar</span> carreiras musicais através de dados e estratégia.
           </p>
 
-          {/* BOTÃO COM EFEITO FIBRA ÓTICA */}
-          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="relative group p-[2px] rounded-full overflow-hidden">
-            <div className="absolute inset-0 border-beam opacity-40"></div>
-            <Link href="/login" className="relative flex items-center gap-4 bg-white text-black px-16 py-7 rounded-full font-bold text-2xl transition-all">
+          {/* BOTÃO REDUZIDO COM FIBRA ÓTICA */}
+          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="relative p-[1px] rounded-full overflow-hidden">
+             <div className="absolute inset-0 bg-[conic-gradient(from_0deg,transparent_0%,#12f2f2_50%,transparent_100%)] animate-[spin_3s_linear_infinite] opacity-40"></div>
+             <Link href="/login" className="relative flex items-center gap-3 bg-white text-black px-10 py-4 rounded-full font-bold text-xl transition-all">
               Iniciar Análise SWOT
-              <ArrowRight className="w-7 h-7 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Link>
           </motion.div>
         </div>
 
         {/* SWITCH MATURIDADE */}
-        <div className="mt-28 flex flex-col items-center gap-8 relative z-10">
+        <div className="mt-24 flex flex-col items-center gap-8 relative z-10">
           <div onClick={() => setIsAdvanced(!isAdvanced)} className="w-80 h-20 bg-zinc-900 border border-zinc-800 rounded-full p-2 cursor-pointer relative flex items-center">
             <motion.div animate={{ x: isAdvanced ? 156 : 0 }} style={{ backgroundColor: isAdvanced ? colors.vinho : colors.azulNeon }} className="absolute w-[150px] h-16 rounded-full shadow-lg" />
             <div className="flex justify-around w-full z-10 font-bold text-[10px] uppercase tracking-widest">
@@ -115,30 +115,28 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* SEÇÃO SERVIÇOS - FORMATO PAISAGEM (16/9) */}
+      {/* SEÇÃO SERVIÇOS - PAISAGEM LADO A LADO */}
       <section id="servicos" className="py-32 w-full max-w-7xl mx-auto px-6 relative z-10 flex flex-col items-center">
         
-        {/* Switch de View Menor e Centralizado */}
-        <div className="flex items-center gap-1 bg-zinc-900 border border-zinc-800 rounded-full p-1 mb-24 scale-90">
+        {/* Switch de View */}
+        <div className="flex items-center gap-1 bg-zinc-900 border border-zinc-800 rounded-full p-1 mb-20 scale-90">
           <button onClick={() => setViewMode('list')} className={`px-4 py-2 rounded-full flex gap-2 items-center text-[9px] uppercase tracking-widest font-bold transition-all ${viewMode === 'list' ? 'bg-zinc-800 text-white' : 'text-zinc-500 hover:text-zinc-100'}`}><List size={12}/> List</button>
           <button onClick={() => setViewMode('grid')} className={`px-4 py-2 rounded-full flex gap-2 items-center text-[9px] uppercase tracking-widest font-bold transition-all ${viewMode === 'grid' ? 'bg-white text-black' : 'text-zinc-500 hover:text-zinc-100'}`}><Grid3X3 size={12}/> Grid</button>
         </div>
 
-        {/* Grid Flexível: Lado a lado no Grid, Coluna centralizada na List */}
-        <div className={`flex flex-wrap justify-center gap-10 w-full transition-all duration-700 ${viewMode === 'list' ? 'flex-col items-center' : 'flex-row'}`}>
+        {/* Layout Grid: 3 Colunas Lado a Lado | Layout List: Coluna Única Centralizada */}
+        <div className={`grid gap-6 w-full transition-all duration-700 ${viewMode === 'grid' ? 'grid-cols-1 md:grid-cols-3' : 'grid-cols-1 max-w-[500px]'}`}>
           {servicos.map((s) => (
             <motion.div 
               layout 
               key={s.id} 
-              className="bg-zinc-900/40 border border-zinc-800/50 rounded-[40px] overflow-hidden relative group transition-all w-full max-w-[450px] aspect-video p-10 flex flex-col justify-end shadow-2xl hover:border-zinc-700"
+              className="bg-zinc-900/40 border border-zinc-800/50 rounded-[28px] overflow-hidden relative group transition-all aspect-video p-10 flex flex-col justify-end shadow-2xl hover:border-zinc-700"
             >
-              {/* Imagem de Fundo (Conteúdo do Bloco em Paisagem) */}
               <div className="absolute inset-0 z-0">
                 <Image src={s.img} alt={`Serviço ${s.id}`} fill className="object-cover opacity-30 group-hover:opacity-50 transition-all duration-700 group-hover:scale-105" />
               </div>
 
-              {/* Número Sutil Superior Esquerdo */}
-              <div style={{ color: s.color }} className="absolute top-8 left-8 font-mono text-[9px] tracking-[0.6em] font-bold opacity-70 z-10">
+              <div style={{ color: s.color }} className="absolute top-6 left-6 font-mono text-[9px] tracking-[0.6em] font-bold opacity-70 z-10">
                 {s.id} /
               </div>
             </motion.div>
@@ -176,18 +174,9 @@ export default function HomePage() {
         html { scroll-behavior: smooth; }
         body { font-family: 'Sora', sans-serif; background: #0f1015; color: white; -webkit-font-smoothing: antialiased; }
 
-        /* Animação da Fibra Ótica (Beam Effect) */
-        @keyframes beam {
-          0% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
-        }
-
-        .border-beam {
-          background: linear-gradient(90deg, transparent, rgba(18, 242, 242, 0.4), transparent);
-          background-size: 200% 100%;
-          animation: beam 3s linear infinite;
-          border: 1px solid rgba(255,255,255,0.1);
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
         }
       `}</style>
     </main>

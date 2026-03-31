@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { motion, AnimatePresence, useScroll, useTransform, useInView } from "framer-motion";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { ArrowRight, Menu, X, List, Grid3X3 } from "lucide-react";
 
 export default function HomePage() {
@@ -48,7 +48,7 @@ export default function HomePage() {
   return (
     <main className="min-h-screen bg-[#0f1015] text-white flex flex-col items-center relative overflow-x-hidden font-sora select-none selection:bg-zinc-700">
       
-      {/* MENU */}
+      {/* MENU - CORRIGIDO PARA EVITAR #SOBRE#SOBRE */}
       <motion.header 
         style={{ opacity: headerOpacity, y: headerY }}
         className="fixed top-6 z-[100] w-full max-w-5xl px-4 pointer-events-auto"
@@ -63,9 +63,9 @@ export default function HomePage() {
           <ul className="hidden xl:flex gap-1 text-[10px] uppercase tracking-widest font-bold text-zinc-500 relative z-10">
             {navItems.map((item) => (
               <li key={item.name}>
-                <Link href={item.href} className="px-4 py-2 rounded-full border border-transparent hover:border-zinc-700 hover:text-white transition-all duration-300 block">
+                <a href={item.href} className="px-4 py-2 rounded-full border border-transparent hover:border-zinc-700 hover:text-white transition-all duration-300 block">
                   {item.name}
-                </Link>
+                </a>
               </li>
             ))}
           </ul>
@@ -84,7 +84,7 @@ export default function HomePage() {
         />
 
         <div className="relative z-10 flex flex-col items-center mb-16">
-          <h1 className="text-5xl md:text-6xl font-extrabold tracking-tighter mb-6 leading-tight">
+          <h1 className="text-5xl md:text-6xl font-extrabold tracking-tighter mb-6 leading-tight uppercase italic">
             EMREDE <span style={{ color: isAdvanced ? colors.vinho : colors.azulNeon }} className="transition-colors duration-700">PRO</span>
           </h1>
           
@@ -103,24 +103,15 @@ export default function HomePage() {
           </div>
         </div>
 
-        <motion.div 
-          whileHover={{ scale: 1.05 }} 
-          whileTap={{ scale: 0.95 }} 
-          className="relative z-10 rounded-full p-[1px] overflow-hidden group shadow-2xl"
-        >
+        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="relative z-10 rounded-full p-[1px] overflow-hidden group shadow-2xl">
           <div className="absolute inset-0 rounded-full pointer-events-none varko-beam-overlay animation-beam-azul opacity-60 group-hover:opacity-100 transition-opacity"></div>
-          
-          <Link 
-            href="/login" 
-            className="relative flex items-center gap-3 bg-transparent hover:bg-[#12f2f2] text-white hover:text-black px-12 py-5 rounded-full font-bold text-xl border border-white/10 transition-all duration-500"
-          >
-            Iniciar Análise SWOT
-            <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
+          <Link href="/login" className="relative flex items-center gap-3 bg-transparent hover:bg-[#12f2f2] text-white hover:text-black px-12 py-5 rounded-full font-bold text-xl border border-white/10 transition-all duration-500">
+            Iniciar Análise SWOT <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
           </Link>
         </motion.div>
       </section>
 
-      {/* 2. SEÇÃO SOBRE - SCROLL TRIGGER (REVEAL) */}
+      {/* 2. SEÇÃO SOBRE - SCROLL TRIGGER REAL (ESTILO GSAP) */}
       <SobreSection />
 
       {/* SEÇÃO SERVIÇOS */}
@@ -132,11 +123,7 @@ export default function HomePage() {
 
         <div className={`grid gap-10 w-full transition-all duration-700 ${viewMode === 'grid' ? 'grid-cols-1 md:grid-cols-3' : 'grid-cols-1 max-w-[500px]'}`}>
           {servicos.map((s) => (
-            <motion.div 
-              layout 
-              key={s.id} 
-              className="relative group rounded-[32px] overflow-hidden aspect-video transition-all shadow-2xl"
-            >
+            <motion.div layout key={s.id} className="relative group rounded-[32px] overflow-hidden aspect-video transition-all shadow-2xl">
               <div className="absolute inset-0 rounded-[32px] pointer-events-none varko-beam-overlay animation-beam-azul opacity-30 group-hover:opacity-90 transition-opacity z-20"></div>
               <div className="absolute inset-0 border border-zinc-800/50 rounded-[32px] z-10"></div>
               <div className="absolute inset-0 z-0">
@@ -148,26 +135,20 @@ export default function HomePage() {
         </div>
       </section>
 
-      <footer className="py-20 text-zinc-900 text-[10px] tracking-[0.6em] uppercase font-black text-center w-full mt-auto relative z-10">© {year} EMREDE PRO / TRANSMUTAÇÃO CONSTANTE</footer>
+      <footer className="py-20 text-zinc-900 text-[10px] tracking-[0.6em] uppercase font-black text-center w-full mt-auto relative z-10">© {year} EMREDE PRO</footer>
 
       <style jsx global>{`
         @import url('https://fonts.googleapis.com/css2?family=Sora:wght@100;300;400;600;800&display=swap');
         html { scroll-behavior: smooth; }
         body { font-family: 'Sora', sans-serif; background: #0f1015; color: white; -webkit-font-smoothing: antialiased; margin: 0; }
-
         .varko-beam-overlay {
           position: absolute; inset: 0; border-radius: inherit; padding: 1.5px;
           background: linear-gradient(transparent, transparent) padding-box,
                       conic-gradient(from var(--border-angle), transparent 20%, var(--beam-color) 50%, transparent 80%) border-box;
           -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
           mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-          -webkit-mask-composite: xor;
-          mask-composite: exclude;
-          pointer-events: none;
-          z-index: 5;
-          animation: border-angle 4s linear infinite;
+          -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; z-index: 5; animation: border-angle 4s linear infinite;
         }
-
         .animation-beam-azul { --beam-color: #12f2f2; }
         @property --border-angle { syntax: "<angle>"; initial-value: 0deg; inherits: false; }
         @keyframes border-angle { from { --border-angle: 0deg; } to { --border-angle: 360deg; } }
@@ -176,34 +157,25 @@ export default function HomePage() {
   );
 }
 
-/* COMPONENTE SOBRE COM SCROLL TRIGGER REAL (ESTILO GSAP) */
 function SobreSection() {
   const containerRef = useRef(null);
-  
-  // useScroll captura o progresso real do scroll dentro deste container
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start end", "center center"] // Começa a contar quando a seção entra na tela e termina no centro
+    offset: ["start end", "center center"]
   });
 
-  // Transformações baseadas no progresso do scroll (0 a 1)
-  const opacity = useTransform(scrollYProgress, [0, 0.6, 1], [0, 1, 1]);
-  const y = useTransform(scrollYProgress, [0, 1], [100, 0]);
-  const scale = useTransform(scrollYProgress, [0, 1], [0.95, 1]);
+  const opacity = useTransform(scrollYProgress, [0, 0.7], [0, 1]);
+  const y = useTransform(scrollYProgress, [0, 1], [50, 0]);
 
   return (
-    <section id="sobre" ref={containerRef} className="min-h-screen flex items-center justify-center px-6 py-32 border-t border-zinc-900/50 overflow-hidden">
-      <motion.div 
-        style={{ opacity, y, scale }}
-        className="max-w-4xl text-center"
-      >
-        {/* TEXTO DIMINUÍDO EM 4PX (de 36px/4xl para 32px/3xl) */}
-        <p className="text-2xl md:text-[32px] font-light leading-relaxed text-zinc-400">
+    <section id="sobre" ref={containerRef} className="min-h-screen flex items-center justify-center px-6 py-40 border-t border-zinc-900/50 relative overflow-hidden">
+      <motion.div style={{ opacity, y }} className="max-w-4xl text-center">
+        <p className="text-xl md:text-[28px] font-light leading-relaxed text-zinc-400">
           Trabalhamos lado a lado com artistas para <span className="text-white font-medium">potencializar sua música</span> e sua presença no mercado. Com estratégias personalizadas, ajudamos a construir uma identidade forte, alcançar novos públicos e posicionar seu trabalho de forma profissional.
         </p>
 
         <motion.p 
-          style={{ opacity: useTransform(scrollYProgress, [0.4, 0.8, 1], [0, 1, 1]) }}
+          style={{ opacity: useTransform(scrollYProgress, [0.5, 0.9], [0, 1]) }}
           className="text-lg md:text-xl font-light leading-relaxed text-zinc-500 mt-12"
         >
           Seja você um cantor, produtor ou banda, oferecemos suporte completo, desde a criação de conteúdo até campanhas de divulgação. Mais que uma agência, somos um hub que impulsiona projetos, unindo criatividade, gestão e inovação para transformar ideias em projetos de alto impacto.

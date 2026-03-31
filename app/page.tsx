@@ -1,15 +1,14 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import Link from "next/link";
+import Link from "next/image";
 import Image from "next/image";
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
-import { ArrowRight, Menu, List, Grid3X3 } from "lucide-react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { ArrowRight, List, Grid3X3 } from "lucide-react";
 
 export default function HomePage() {
   const [isAdvanced, setIsAdvanced] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const [year, setYear] = useState<number | null>(null);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
   const { scrollY } = useScroll();
@@ -18,7 +17,6 @@ export default function HomePage() {
 
   useEffect(() => {
     setMounted(true);
-    setYear(new Date().getFullYear());
   }, []);
 
   const navItems = [
@@ -47,11 +45,11 @@ export default function HomePage() {
         className="fixed top-6 z-[100] w-full max-w-5xl px-4 pointer-events-auto"
       >
         <nav className="relative bg-zinc-950/90 border border-zinc-800 rounded-full px-8 py-3 flex items-center justify-between shadow-2xl overflow-hidden group">
-          <div className="absolute inset-0 rounded-full pointer-events-none varko-beam-overlay animation-beam-azul opacity-50 group-hover:opacity-100 transition-opacity"></div>
+          <div className="absolute inset-0 rounded-full pointer-events-none beam-effect opacity-50 group-hover:opacity-100 transition-opacity"></div>
           
-          <Link href="/" className="flex items-center relative z-10">
+          <a href="/" className="flex items-center relative z-10">
             <Image src="/Prancheta 6.png" alt="Emrede Pro" width={90} height={24} className="h-6 w-auto object-contain" priority />
-          </Link>
+          </a>
           
           <ul className="hidden xl:flex gap-1 text-[10px] uppercase tracking-widest font-bold text-zinc-500 relative z-10">
             {navItems.map((item) => (
@@ -65,7 +63,7 @@ export default function HomePage() {
         </nav>
       </motion.header>
 
-      {/* 1. HERO SECTION */}
+      {/* HERO SECTION */}
       <section id="home" className="min-h-screen flex flex-col items-center justify-center text-center relative w-full max-w-5xl px-6 pt-20">
         <motion.div 
           animate={{ backgroundColor: isAdvanced ? "#8e1e44" : "#12f2f2", opacity: 0.15 }}
@@ -91,20 +89,20 @@ export default function HomePage() {
           </div>
         </div>
 
-        <motion.div whileHover={{ scale: 1.05 }} className="relative z-10 rounded-full p-[1px] overflow-hidden group">
-          <div className="absolute inset-0 rounded-full pointer-events-none varko-beam-overlay animation-beam-azul opacity-60 group-hover:opacity-100 transition-opacity"></div>
-          <Link href="/login" className="relative flex items-center gap-3 bg-transparent hover:bg-[#12f2f2] text-white hover:text-black px-12 py-5 rounded-full font-bold text-xl border border-white/10 transition-all duration-500">
+        <motion.div whileHover={{ scale: 1.05 }} className="relative z-10 rounded-full p-[1px] overflow-hidden group shadow-2xl">
+          <div className="absolute inset-0 rounded-full pointer-events-none beam-effect opacity-60"></div>
+          <a href="/login" className="relative flex items-center gap-3 bg-transparent hover:bg-[#12f2f2] text-white hover:text-black px-12 py-5 rounded-full font-bold text-xl border border-white/10 transition-all duration-500">
             Iniciar Análise SWOT <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
-          </Link>
+          </a>
         </motion.div>
       </section>
 
-      {/* 2. SEÇÃO SOBRE - 28PX + SCROLL TRIGGER */}
+      {/* 2. SEÇÃO SOBRE - 28PX + SCROLL REVEAL */}
       <SobreSection />
 
       {/* SEÇÃO SERVIÇOS */}
       <section id="servicos" className="py-32 w-full max-w-7xl mx-auto px-6 relative z-10 flex flex-col items-center">
-        <div className="flex items-center gap-1 bg-zinc-900 border border-zinc-800 rounded-full p-1 mb-20 scale-90">
+        <div className="flex bg-zinc-900 border border-zinc-800 rounded-full p-1 mb-20 scale-90">
           <button onClick={() => setViewMode('list')} className={`px-4 py-2 rounded-full flex gap-2 items-center text-[9px] uppercase tracking-widest font-bold transition-all ${viewMode === 'list' ? 'bg-zinc-800 text-white' : 'text-zinc-500 hover:text-zinc-100'}`}><List size={12}/> List</button>
           <button onClick={() => setViewMode('grid')} className={`px-4 py-2 rounded-full flex gap-2 items-center text-[9px] uppercase tracking-widest font-bold transition-all ${viewMode === 'grid' ? 'bg-white text-black' : 'text-zinc-500 hover:text-zinc-100'}`}><Grid3X3 size={12}/> Grid</button>
         </div>
@@ -112,7 +110,7 @@ export default function HomePage() {
         <div className={`grid gap-10 w-full transition-all duration-700 ${viewMode === 'grid' ? 'grid-cols-1 md:grid-cols-3' : 'grid-cols-1 max-w-[500px]'}`}>
           {servicos.map((s) => (
             <div key={s.id} className="relative group rounded-[32px] overflow-hidden aspect-video transition-all shadow-2xl">
-              <div className="absolute inset-0 rounded-[32px] pointer-events-none varko-beam-overlay animation-beam-azul opacity-30 group-hover:opacity-90 transition-opacity z-20"></div>
+              <div className="absolute inset-0 rounded-[32px] pointer-events-none beam-effect opacity-30 group-hover:opacity-90 transition-opacity z-20"></div>
               <div className="absolute inset-0 border border-zinc-800/50 rounded-[32px] z-10"></div>
               <div className="absolute inset-0 z-0">
                 <Image src={s.img} alt={`Serviço ${s.id}`} fill className="object-cover opacity-30 group-hover:opacity-50 transition-all duration-700 group-hover:scale-105" />
@@ -123,23 +121,19 @@ export default function HomePage() {
         </div>
       </section>
 
-      <footer className="py-20 text-zinc-900 text-[10px] tracking-[0.6em] uppercase font-black text-center w-full mt-auto relative z-10">© {year} EMREDE PRO</footer>
+      <footer className="py-20 text-zinc-900 text-[10px] tracking-[0.6em] uppercase font-black text-center w-full mt-auto relative z-10">© EMREDE PRO</footer>
 
       <style jsx global>{`
         @import url('https://fonts.googleapis.com/css2?family=Sora:wght@100;300;400;600;800&display=swap');
         html { scroll-behavior: smooth; }
         body { font-family: 'Sora', sans-serif; background: #0f1015; color: white; -webkit-font-smoothing: antialiased; margin: 0; }
         
-        .varko-beam-overlay {
+        .beam-effect {
           position: absolute; inset: 0; border-radius: inherit; padding: 1.5px;
-          background: linear-gradient(transparent, transparent) padding-box,
-                      conic-gradient(from var(--border-angle), transparent 20%, #12f2f2 50%, transparent 80%) border-box;
+          background: linear-gradient(90deg, transparent, #12f2f2, transparent);
           -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-          mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-          -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; z-index: 5; animation: border-angle 4s linear infinite;
+          mask-composite: exclude; pointer-events: none;
         }
-        @property --border-angle { syntax: "<angle>"; initial-value: 0deg; inherits: false; }
-        @keyframes border-angle { from { --border-angle: 0deg; } to { --border-angle: 360deg; } }
       `}</style>
     </main>
   );
@@ -152,17 +146,17 @@ function SobreSection() {
     offset: ["start end", "center center"]
   });
 
-  const opacity = useTransform(scrollYProgress, [0, 0.7], [0, 1]);
+  const opacity = useTransform(scrollYProgress, [0, 0.7, 1], [0, 1, 1]);
   const y = useTransform(scrollYProgress, [0, 1], [50, 0]);
 
   return (
-    <section id="sobre" ref={containerRef} className="min-h-screen flex items-center justify-center px-6 py-40 border-t border-zinc-900/50 relative">
+    <section id="sobre" ref={containerRef} className="min-h-[80vh] flex items-center justify-center px-6 py-40 border-t border-zinc-900/50 relative">
       <motion.div style={{ opacity, y }} className="max-w-4xl text-center">
         <p className="text-xl md:text-[28px] font-light leading-relaxed text-zinc-400">
           Trabalhamos lado a lado com artistas para <span className="text-white font-medium">potencializar sua música</span> e sua presença no mercado. Com estratégias personalizadas, ajudamos a construir uma identidade forte, alcançar novos públicos e posicionar seu trabalho de forma profissional.
         </p>
         <motion.p 
-          style={{ opacity: useTransform(scrollYProgress, [0.5, 0.9], [0, 1]) }}
+          style={{ opacity: useTransform(scrollYProgress, [0.5, 0.9, 1], [0, 1, 1]) }}
           className="text-lg md:text-xl font-light leading-relaxed text-zinc-500 mt-12"
         >
           Seja você um cantor, produtor ou banda, oferecemos suporte completo, desde a criação de conteúdo até campanhas de divulgação. Mais que uma agência, somos um hub que impulsiona projetos, unindo criatividade, gestão e inovação para transformar ideias em projetos de alto impacto.

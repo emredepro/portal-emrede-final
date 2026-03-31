@@ -48,7 +48,7 @@ export default function HomePage() {
   return (
     <main className="min-h-screen bg-[#0f1015] text-white flex flex-col items-center relative overflow-x-hidden font-sora select-none selection:bg-zinc-700">
       
-      {/* MENU - COM FIBRA ÓTICA AZUL */}
+      {/* MENU */}
       <motion.header 
         style={{ opacity: headerOpacity, y: headerY }}
         className="fixed top-6 z-[100] w-full max-w-5xl px-4 pointer-events-auto"
@@ -76,7 +76,7 @@ export default function HomePage() {
         </nav>
       </motion.header>
 
-      {/* HERO SECTION */}
+      {/* 1. HERO SECTION */}
       <section id="home" className="min-h-screen flex flex-col items-center justify-center text-center relative w-full max-w-5xl px-6 pt-20">
         <motion.div 
           animate={{ backgroundColor: isAdvanced ? colors.vinho : colors.azulNeon, opacity: 0.15 }}
@@ -93,7 +93,6 @@ export default function HomePage() {
           </p>
         </div>
 
-        {/* SWITCH MATURIDADE */}
         <div className="flex flex-col items-center gap-8 relative z-10 mb-12">
           <div onClick={() => setIsAdvanced(!isAdvanced)} className="w-80 h-20 bg-zinc-900 border border-zinc-800 rounded-full p-2 cursor-pointer relative flex items-center">
             <motion.div animate={{ x: isAdvanced ? 156 : 0 }} transition={{ type: "spring", stiffness: 300, damping: 30 }} style={{ backgroundColor: isAdvanced ? colors.vinho : colors.azulNeon }} className="absolute w-[150px] h-16 rounded-full shadow-lg" />
@@ -104,7 +103,6 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* BOTÃO SWOT */}
         <motion.div 
           whileHover={{ scale: 1.05 }} 
           whileTap={{ scale: 0.95 }} 
@@ -158,10 +156,7 @@ export default function HomePage() {
         body { font-family: 'Sora', sans-serif; background: #0f1015; color: white; -webkit-font-smoothing: antialiased; margin: 0; }
 
         .varko-beam-overlay {
-          position: absolute;
-          inset: 0;
-          border-radius: inherit;
-          padding: 1.5px;
+          position: absolute; inset: 0; border-radius: inherit; padding: 1.5px;
           background: linear-gradient(transparent, transparent) padding-box,
                       conic-gradient(from var(--border-angle), transparent 20%, var(--beam-color) 50%, transparent 80%) border-box;
           -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
@@ -174,49 +169,46 @@ export default function HomePage() {
         }
 
         .animation-beam-azul { --beam-color: #12f2f2; }
-
-        @property --border-angle {
-          syntax: "<angle>";
-          initial-value: 0deg;
-          inherits: false;
-        }
-
-        @keyframes border-angle {
-          from { --border-angle: 0deg; }
-          to { --border-angle: 360deg; }
-        }
+        @property --border-angle { syntax: "<angle>"; initial-value: 0deg; inherits: false; }
+        @keyframes border-angle { from { --border-angle: 0deg; } to { --border-angle: 360deg; } }
       `}</style>
     </main>
   );
 }
 
-/* COMPONENTE DA SEÇÃO SOBRE COM EFEITO SCROLL TRIGGER */
+/* COMPONENTE SOBRE COM SCROLL TRIGGER REAL (ESTILO GSAP) */
 function SobreSection() {
-  const ref = useRef(null);
-  // O margin: "-20%" faz com que a animação comece um pouco depois que a seção entra na tela
-  const isInView = useInView(ref, { once: false, margin: "-20%" });
+  const containerRef = useRef(null);
+  
+  // useScroll captura o progresso real do scroll dentro deste container
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "center center"] // Começa a contar quando a seção entra na tela e termina no centro
+  });
+
+  // Transformações baseadas no progresso do scroll (0 a 1)
+  const opacity = useTransform(scrollYProgress, [0, 0.6, 1], [0, 1, 1]);
+  const y = useTransform(scrollYProgress, [0, 1], [100, 0]);
+  const scale = useTransform(scrollYProgress, [0, 1], [0.95, 1]);
 
   return (
-    <section id="sobre" ref={ref} className="min-h-screen flex items-center justify-center px-6 py-32 border-t border-zinc-900/50">
-      <div className="max-w-4xl text-center">
-        <motion.p 
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="text-2xl md:text-4xl font-light leading-relaxed text-zinc-400"
-        >
+    <section id="sobre" ref={containerRef} className="min-h-screen flex items-center justify-center px-6 py-32 border-t border-zinc-900/50 overflow-hidden">
+      <motion.div 
+        style={{ opacity, y, scale }}
+        className="max-w-4xl text-center"
+      >
+        {/* TEXTO DIMINUÍDO EM 4PX (de 36px/4xl para 32px/3xl) */}
+        <p className="text-2xl md:text-[32px] font-light leading-relaxed text-zinc-400">
           Trabalhamos lado a lado com artistas para <span className="text-white font-medium">potencializar sua música</span> e sua presença no mercado. Com estratégias personalizadas, ajudamos a construir uma identidade forte, alcançar novos públicos e posicionar seu trabalho de forma profissional.
-        </motion.p>
+        </p>
 
         <motion.p 
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-          transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
+          style={{ opacity: useTransform(scrollYProgress, [0.4, 0.8, 1], [0, 1, 1]) }}
           className="text-lg md:text-xl font-light leading-relaxed text-zinc-500 mt-12"
         >
           Seja você um cantor, produtor ou banda, oferecemos suporte completo, desde a criação de conteúdo até campanhas de divulgação. Mais que uma agência, somos um hub que impulsiona projetos, unindo criatividade, gestão e inovação para transformar ideias em projetos de alto impacto.
         </motion.p>
-      </div>
+      </motion.div>
     </section>
   );
 }

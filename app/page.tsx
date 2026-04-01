@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useLayoutEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
@@ -20,54 +20,55 @@ export default function HomePage() {
   const text1Ref = useRef(null);
   const text2Ref = useRef(null);
 
-  useEffect(() => {
+  // useLayoutEffect é fundamental para o GSAP medir o layout antes do usuário ver a página
+  useLayoutEffect(() => {
+    if (typeof window === "undefined") return;
     setMounted(true);
-    if (!mounted) return;
 
-    // Aguarda o layout estabilizar para o GSAP medir a altura correta
-    const timer = setTimeout(() => {
-      let ctx = gsap.context(() => {
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: "top top",
-            end: "+=300%", // Espaço de scroll para os 2 textos
-            pin: true,     // Trava a tela aqui
-            scrub: 1,      // Sincroniza com o movimento do mouse
-            anticipatePin: 1,
-          }
-        });
+    let ctx = gsap.context(() => {
+      // Criamos a Timeline que controla o PIN
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top top",
+          end: "+=300%", // Distância do scroll para os 2 textos
+          pin: true,     // Trava a tela
+          scrub: 1,      // Suavidade
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+        }
+      });
 
-        // SEQUÊNCIA DOS 2 TEXTOS
-        tl.fromTo(text1Ref.current, 
-          { opacity: 0, y: 40 }, 
-          { opacity: 1, y: 0, duration: 1 }
-        )
-        .to(text1Ref.current, 
-          { opacity: 0, y: -40, duration: 1, delay: 0.5 }
-        )
-        .fromTo(text2Ref.current, 
-          { opacity: 0, y: 40 }, 
-          { opacity: 1, y: 0, duration: 1 }
-        )
-        .to(text2Ref.current, 
-          { opacity: 0, y: -40, duration: 1, delay: 0.5 });
+      // TEXTO 1: Entra, fica, sai
+      tl.fromTo(text1Ref.current, 
+        { opacity: 0, y: 50 }, 
+        { opacity: 1, y: 0, duration: 1, immediateRender: false }
+      )
+      .to(text1Ref.current, 
+        { opacity: 0, y: -50, duration: 1, delay: 0.5 }
+      )
+      // TEXTO 2: Entra, fica, sai
+      .fromTo(text2Ref.current, 
+        { opacity: 0, y: 50 }, 
+        { opacity: 1, y: 0, duration: 1, immediateRender: false }
+      )
+      .to(text2Ref.current, 
+        { opacity: 0, y: -50, duration: 1, delay: 0.5 });
 
-      }, containerRef);
+    }, containerRef);
 
-      ScrollTrigger.refresh();
-      return () => ctx.revert();
-    }, 200);
+    // Refresh forçado para garantir que a Vercel entendeu a altura
+    ScrollTrigger.refresh();
 
-    return () => clearTimeout(timer);
-  }, [mounted]);
+    return () => ctx.revert();
+  }, []);
 
   if (!mounted) return <div className="min-h-screen bg-[#0f1015]" />;
 
   return (
     <main className="bg-[#0f1015] text-white flex flex-col items-center relative font-sora select-none overflow-x-hidden">
       
-      {/* HEADER FIXO */}
+      {/* HEADER FIXO COM FIBRA ÓTICA */}
       <header className="fixed top-6 z-[100] w-full max-w-5xl px-4">
         <nav className="relative bg-zinc-950/90 border border-zinc-800 rounded-full px-8 py-3 flex items-center justify-between shadow-2xl overflow-hidden group">
           <div className="absolute inset-0 rounded-full varko-beam-css opacity-50 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
@@ -82,7 +83,7 @@ export default function HomePage() {
         </nav>
       </header>
 
-      {/* 1. HERO SECTION */}
+      {/* 1. HERO - EMREDE PRO SEM ITÁLICO */}
       <section id="home" className="min-h-screen flex flex-col items-center justify-center text-center relative w-full px-6 z-10">
         <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-[140px] pointer-events-none opacity-20 transition-colors duration-1000 ${isAdvanced ? 'bg-[#8e1e44]' : 'bg-[#12f2f2]'}`} />
         <h1 className="text-5xl md:text-6xl font-extrabold tracking-tighter mb-6 uppercase">
@@ -99,28 +100,26 @@ export default function HomePage() {
         </Link>
       </section>
 
-      {/* 2. SEÇÃO SOBRE (AQUI ESTÃO OS 2 TEXTOS DO SCROLL) */}
-      <section ref={containerRef} id="sobre" className="w-full bg-[#0f1015] relative z-20">
-        <div className="h-screen w-full flex items-center justify-center px-6 relative overflow-hidden border-t border-zinc-900/50">
+      {/* 2. SEÇÃO SOBRE - OS 2 TEXTOS DO SCROLL TRIGGER */}
+      <section ref={containerRef} id="sobre" className="w-full bg-[#0f1015] relative z-20 border-t border-zinc-900/50">
+        <div className="h-screen w-full flex items-center justify-center px-6 relative overflow-hidden">
           
-          {/* TEXTO 1 */}
           <div ref={text1Ref} className="max-w-4xl absolute text-center pointer-events-none opacity-0">
             <p className="text-xl md:text-[28px] font-light leading-relaxed text-zinc-400">
               Trabalhamos lado a lado com artistas para <span className="text-white font-medium">potencializar sua música</span> e sua presença no mercado.
             </p>
           </div>
 
-          {/* TEXTO 2 */}
           <div ref={text2Ref} className="max-w-4xl absolute text-center pointer-events-none opacity-0">
             <p className="text-[20px] md:text-[24px] font-light leading-relaxed text-zinc-500">
-              Seja você um cantor, produtor ou banda, oferecemos suporte completo para transformar ideias em projetos de <span className="text-white font-medium">alto impacto</span>.
+              Oferecemos suporte completo para transformar ideias em projetos de <span className="text-white font-medium">alto impacto</span> profissional.
             </p>
           </div>
           
         </div>
       </section>
 
-      {/* 3. SEÇÃO SERVIÇOS (CONTEÚDO APÓS O SCROLL) */}
+      {/* 3. SERVIÇOS - ABAIXO DA ANIMAÇÃO */}
       <section id="servicos" className="py-40 w-full max-w-7xl mx-auto px-6 relative z-30 border-t border-zinc-900/30">
          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
           {[1, 2, 3].map((n) => (

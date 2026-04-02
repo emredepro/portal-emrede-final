@@ -50,27 +50,38 @@ export default function HomePage() {
         </Link>
       </section>
 
-      {/* 2. SEÇÃO SOBRE - SEM SCROLL TRIGGER (FADE-IN NATURAL) */}
-      <section id="sobre" className="py-40 w-full max-w-4xl px-6 flex flex-col gap-20 text-center relative z-20">
+      {/* 2. SEÇÃO SOBRE - TEXTO OFICIAL COM FADE-IN */}
+      <section id="sobre" className="py-40 w-full max-w-5xl px-6 flex flex-col gap-24 text-center relative z-20">
+        
+        {/* Bloco 1 */}
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.8 }}
+          className="flex flex-col gap-6"
         >
           <p className="text-xl md:text-[28px] font-light leading-relaxed text-zinc-400">
             Trabalhamos lado a lado com artistas para <span className="text-white font-medium">potencializar sua música</span> e sua presença no mercado.
           </p>
+          <p className="text-lg md:text-[22px] font-light leading-relaxed text-zinc-500">
+            Com estratégias personalizadas, ajudamos a construir uma <span className="text-zinc-300">identidade forte</span>, alcançar novos públicos e posicionar seu trabalho de forma profissional.
+          </p>
         </motion.div>
 
+        {/* Bloco 2 */}
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.8, delay: 0.2 }}
+          className="flex flex-col gap-6"
         >
-          <p className="text-[20px] md:text-[24px] font-light leading-relaxed text-zinc-500">
-            Seja você um cantor, produtor ou banda, oferecemos suporte completo para transformar ideias em projetos de <span className="text-white font-medium">alto impacto</span>.
+          <p className="text-xl md:text-[26px] font-light leading-relaxed text-zinc-400">
+            Seja você um cantor, produtor ou banda, oferecemos <span className="text-white font-medium">suporte completo</span>, desde a criação de conteúdo até campanhas de divulgação.
+          </p>
+          <p className="text-lg md:text-[22px] font-light leading-relaxed text-zinc-500">
+            Mais que uma agência, somos um <span className="text-[#12f2f2]">hub que impulsiona projetos</span>, unindo criatividade, gestão e inovação para transformar ideias em projetos de <span className="text-white font-bold">alto impacto</span>.
           </p>
         </motion.div>
       </section>
